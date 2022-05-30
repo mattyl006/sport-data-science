@@ -1,6 +1,6 @@
 """
 =========
-Animation
+Animations
 =========
 
 This example shows how to animate tracking data from
