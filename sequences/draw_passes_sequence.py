@@ -67,22 +67,24 @@ def draw_pitch(ax):
     ax.add_patch(leftArc)
     ax.add_patch(rightArc)
 
-def draw_passes_sequence(passes):
+def draw_passes_sequence(sequence, start_team):
     fig, ax = plt.subplots()
     fig.set_size_inches(7, 5)
     i = 1
 
-    for index, row in passes.iterrows():
+    for index, row in sequence.iterrows():
         plt.plot(int(row['pass_start_x']), int(row['pass_start_y']), marker='o',
-        markersize=16, markeredgecolor="green", markerfacecolor="black")
-
-        plt.plot([int(row['pass_start_x']), int(row['pass_end_x'])],
-        [int(row['pass_start_y']),int(row['pass_end_y'])], color='green')
-
+        markersize=16, markeredgecolor="black", markerfacecolor="black")
+        if row['possession_team'] == start_team:
+            plt.plot([int(row['pass_start_x']), int(row['pass_end_x'])],
+            [int(row['pass_start_y']),int(row['pass_end_y'])], color='blue')
+        else:
+            plt.plot([int(row['pass_start_x']), int(row['pass_end_x'])],
+            [int(row['pass_start_y']),int(row['pass_end_y'])], color='red')
         plt.text(int(row['pass_start_x'])-1, int(row['pass_start_y'])-1, i,
-        color='white', fontsize=10)
-
+        color='white', fontsize=8)
         i += 1
 
+    print([team for team in sequence['possession_team']][0])
     draw_pitch(ax)
     plt.show()
