@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from statsbombpy import sb
-from grid_areas import get_area_x, get_area_y, get_pass_area, add_grid_areas
+from grid_areas import get_area_x, get_area_y, get_pass_area, add_areas_and_pos
 
 def get_area_x_test():
     print('get_area_x_test')
@@ -30,28 +30,28 @@ def get_pass_area_test():
     else:
         print('get_pass_area_test FAIL\n\n')
 
-def add_grid_areas_test1():
-    passes = sb.events(match_id=3775648, split=True, flatten_attrs=False)["passes"]
-    result1 = add_grid_areas(passes)
+def add_areas_and_pos_test1():
+    passes = sb.events(match_id=3836192, split=True, flatten_attrs=False)["passes"]
+    result1 = add_areas_and_pos(passes)
     result1.to_csv("passes_test.csv", encoding="utf-8", index=False)
     if result1['pass_area_code'][0] == 'M8M9':
-        print('add_grid_areas_test1 PASS\n\n')
+        print('add_areas_and_pos_test1 PASS\n\n')
     else:
-        print('add_grid_areas_test1 FAIL\n\n')
+        print('add_areas_and_pos_test1 FAIL\n\n')
 
-def add_grid_areas_test2():
-    matches = sb.matches(competition_id=37, season_id=90)
+def add_areas_and_pos_test2():
+    matches = sb.matches(competition_id=38, season_id=235)
     errorMessage = 'Error in add_grid_areas, perhaps: Bad dataframe in argument!'
-    if add_grid_areas(matches) == errorMessage:
-        print('add_grid_areas_test2 PASS\n\n')
+    if add_areas_and_pos(matches) == errorMessage:
+        print('add_areas_and_pos_test2 PASS\n\n')
     else:
-        print('add_grid_areas_test2 FAIL\n\n')
+        print('add_areas_and_pos_test2 FAIL\n\n')
 
 def test():
     get_area_x_test()
     get_area_y_test()
     get_pass_area_test()
-    add_grid_areas_test1()
-    add_grid_areas_test2()
+    add_areas_and_pos_test1()
+    add_areas_and_pos_test2()
 
 test()
