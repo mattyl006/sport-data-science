@@ -50,19 +50,6 @@ def draw_pitch(ax, areas=5, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-    #Prepare Arcs
-    # arguments for arc
-    # x, y coordinate of centerpoint of arc
-    # width, height as arc might not be circle, but oval
-    # angle: degree of rotation of the shape, anti-clockwise
-    # theta1, theta2, start and end location of arc in degree
-    leftArc = Arc((9.7,40),height=16.2*scale,width=16.2*scale,angle=0,theta1=310,theta2=50,color="black")
-    rightArc = Arc((110.3,40),height=16.2*scale,width=16.2*scale,angle=0,theta1=130,theta2=230,color="black")
-
-    #Draw Arcs
-    ax.add_patch(leftArc)
-    ax.add_patch(rightArc)
-
 def draw_passes_sequence(sequence, start_team, areas=5, scale=1):
     if areas < 2:
         areas = 2
