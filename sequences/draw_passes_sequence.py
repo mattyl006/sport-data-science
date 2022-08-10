@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
-def draw_pitch(ax):
+def draw_pitch(ax, areas=5):
     # size of the pitch is 120, 80
     #Create figure
 
@@ -33,14 +33,16 @@ def draw_pitch(ax):
     plt.plot([120,115.1],[32,32],color="black")
     
     #Sectors
-    plt.plot([120,0],[32,32], color="gray")
-    plt.plot([120,0],[48,48], color="gray")
-    plt.plot([120,0],[65,65], color="gray")
-    plt.plot([120,0],[15,15], color="gray")
-    plt.plot([14.6,14.6],[80,0], color="gray")
-    plt.plot([105.4,105.4],[80,0], color="gray")
-    plt.plot([40,40],[80,0], color="gray")
-    plt.plot([80,80],[80,0], color="gray")
+    for i in range(1, areas):
+        plt.plot([120,0],[(80/areas)*i,(80/areas)*i], color="gray")
+
+    for i in range(1, areas):
+        plt.plot([(120/areas)*i,(120/areas)*i],[80,0], color="gray")
+
+    # plt.plot([14.6,14.6],[80,0], color="gray")
+    # plt.plot([105.4,105.4],[80,0], color="gray")
+    # plt.plot([40,40],[80,0], color="gray")
+    # plt.plot([80,80],[80,0], color="gray")
     
     #Prepare Circles
     centreCircle = plt.Circle((60,40),8.1,color="black",fill=False)
@@ -67,7 +69,7 @@ def draw_pitch(ax):
     ax.add_patch(leftArc)
     ax.add_patch(rightArc)
 
-def draw_passes_sequence(sequence, start_team):
+def draw_passes_sequence(sequence, start_team, areas=5):
     fig, ax = plt.subplots()
     fig.set_size_inches(7, 5)
     i = 1
@@ -86,5 +88,5 @@ def draw_passes_sequence(sequence, start_team):
         i += 1
 
     print([team for team in sequence['possession_team']][0])
-    draw_pitch(ax)
+    draw_pitch(ax, areas)
     plt.show()
