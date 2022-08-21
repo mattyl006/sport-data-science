@@ -10,3 +10,7 @@ def get_matches(c_id, s_id):
 def get_passes(m_id):
     events = sb.events(match_id=m_id, split=True, flatten_attrs=False)
     return events['passes']
+
+def get_carrys(m_id):
+    events = sb.events(match_id=m_id, split=True, flatten_attrs=False)
+    return events['carrys']

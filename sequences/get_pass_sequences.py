@@ -11,3 +11,19 @@ def get_pass_sequences(passes):
         sequence.append(row)
         team = row['possession_team']
     return sequences
+
+def get_first_id(sequence):
+    return sequence['index'][0]
+
+def get_last_id(sequence):
+    return sequence['index'].iloc[-1]
+
+def get_carrys_sequence(carrys, pass_sequence):
+    first_id = get_first_id(pass_sequence)
+    last_id = get_last_id(pass_sequence)
+    sequence = []
+    for index, row in carrys.iterrows():
+        if row['index'] > first_id and row['index'] < last_id:
+            sequence.append(row)
+    return(pd.DataFrame(sequence))
+
