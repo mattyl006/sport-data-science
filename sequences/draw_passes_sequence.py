@@ -3,6 +3,9 @@ from matplotlib.patches import Arc
 
 def draw_pitch(ax, areas=5, scale=1):
     # size of the pitch is 120, 80
+    
+    X = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U']
+    Y = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
     #Pitch Outline & Centre Line
     plt.plot([0,0],[0,80*scale], color="black")
@@ -10,6 +13,10 @@ def draw_pitch(ax, areas=5, scale=1):
     plt.plot([120*scale,120*scale],[80*scale,0], color="black")
     plt.plot([120*scale,0],[0,0], color="black")
     plt.plot([60*scale,60*scale],[0,80*scale], color="black")
+    
+    for i in range (0,areas):
+        plt.text(((60/areas)+i*120/areas)-1, 83, X[i], fontdict=None)
+        plt.text(-7, ((40/areas)+i*80/areas)-1, Y[i], fontdict=None)
 
     #Left Penalty Area
     plt.plot([14.6*scale,14.6*scale],[57.8*scale,22.2*scale],color="black")
