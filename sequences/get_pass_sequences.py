@@ -18,12 +18,18 @@ def get_first_id(sequence):
 def get_last_id(sequence):
     return sequence['index'].iloc[-1]
 
-def get_carrys_sequence(carrys, pass_sequence):
+def get_additional_sequence(events, pass_sequence):
     first_id = get_first_id(pass_sequence)
     last_id = get_last_id(pass_sequence)
     sequence = []
-    for index, row in carrys.iterrows():
+    for index, row in events.iterrows():
         if row['index'] > first_id and row['index'] < last_id:
             sequence.append(row)
     return(pd.DataFrame(sequence))
 
+def get_additional_sequences(events, pass_sequences):
+    sequences = []
+    for i, s in enumerate(pass_sequences):
+        sequence = get_additional_sequence(events, pass_sequences[i])
+        sequences.append(sequence)
+    return sequences
