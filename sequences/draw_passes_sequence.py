@@ -59,20 +59,29 @@ def draw_passes_sequence(sequence, start_team, areas=5, scale=1):
     fig, ax = plt.subplots()
     fig.set_size_inches(7*scale, 5*scale)
     i = 1
+    
+    team = [team for team in sequence['possession_team']][0]
+    print(f'Team: {team}')
 
     for index, row in sequence.iterrows():
         plt.plot(int(row['pass_start_x']*scale), int(row['pass_start_y']*scale), marker='o',
         markersize=16, markeredgecolor="black", markerfacecolor="black")
+
         if row['possession_team'] == start_team:
             plt.plot([int(row['pass_start_x']*scale), int(row['pass_end_x']*scale)],
             [int(row['pass_start_y']*scale),int(row['pass_end_y']*scale)], color='blue')
         else:
             plt.plot([int(row['pass_start_x']*scale), int(row['pass_end_x']*scale)],
             [int(row['pass_start_y']*scale),int(row['pass_end_y']*scale)], color='red')
+
         plt.text(int(row['pass_start_x']*scale)-1, int(row['pass_start_y']*scale)-1, i,
         color='white', fontsize=8)
+        
+        player = row['player']
+        print(f'{i}: {player}')
+
         i += 1
 
-    print([team for team in sequence['possession_team']][0])
+
     draw_pitch(ax, areas, scale)
     plt.show()
