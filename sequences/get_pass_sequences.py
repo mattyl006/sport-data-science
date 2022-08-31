@@ -13,7 +13,7 @@ def get_pass_sequences(passes):
     return sequences
 
 def get_first_id(sequence):
-    return sequence['index'][0]
+    return sequence['index'].iloc[0]
 
 def get_last_id(sequence):
     return sequence['index'].iloc[-1]
@@ -27,9 +27,9 @@ def get_additional_sequence(events, pass_sequence):
             sequence.append(row)
     return(pd.DataFrame(sequence))
 
-def get_additional_sequences(events, pass_sequences):
-    sequences = []
-    for i, s in enumerate(pass_sequences):
-        sequence = get_additional_sequence(events, pass_sequences[i])
-        sequences.append(sequence)
-    return sequences
+def get_additional_sequences(events_name, pass_sequences):
+    all_sequences = []
+    for i, seq in enumerate(pass_sequences):
+        additional_sequence = get_additional_sequence(events_name, seq)
+        all_sequences.append(pd.DataFrame(additional_sequence))
+    return all_sequences
