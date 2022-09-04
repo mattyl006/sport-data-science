@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
-def draw_pitch(ax, areas=5, scale=1):
+def draw_pitch(ax, areas_x, areas_y, scale=1):
     # size of the pitch is 120, 80
+    
+    X = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T']
+    Y = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
     #Pitch Outline & Centre Line
     plt.plot([0,0],[0,80*scale], color="black")
@@ -10,6 +13,12 @@ def draw_pitch(ax, areas=5, scale=1):
     plt.plot([120*scale,120*scale],[80*scale,0], color="black")
     plt.plot([120*scale,0],[0,0], color="black")
     plt.plot([60*scale,60*scale],[0,80*scale], color="black")
+    
+    for i in range (0,areas_x):
+        plt.text(((60/areas_x)+i*120/areas_x)-1, 82, X[i], fontdict=None)
+        
+    for i in range (0,areas_y):
+        plt.text(-7, ((40/areas_y)+i*80/areas_y)-1, Y[i], fontdict=None)
 
     #Left Penalty Area
     plt.plot([14.6*scale,14.6*scale],[57.8*scale,22.2*scale],color="black")
@@ -32,11 +41,11 @@ def draw_pitch(ax, areas=5, scale=1):
     plt.plot([120*scale,115.1*scale],[32*scale,32*scale],color="black")
     
     #Sectors
-    for i in range(1, areas):
-        plt.plot([120*scale,0],[(80/areas)*i*scale,(80/areas)*i*scale], color="gray")
+    for i in range(1, areas_y):
+        plt.plot([120*scale,0],[(80/areas_y)*i*scale,(80/areas_y)*i*scale], color="gray")
 
-    for i in range(1, areas):
-        plt.plot([(120/areas)*i*scale,(120/areas)*i*scale],[80*scale,0], color="gray")
+    for i in range(1, areas_x):
+        plt.plot([(120/areas_x)*i*scale,(120/areas_x)*i*scale],[80*scale,0], color="gray")
     
     #Prepare Circles
     centreCircle = plt.Circle((60*scale,40*scale),8.1,color="black",fill=False)
@@ -50,9 +59,11 @@ def draw_pitch(ax, areas=5, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-def draw_passes_sequence(sequence, start_team, areas=5, scale=1):
-    if areas < 2:
-        areas = 2
+def draw_passes_sequence(sequence, start_team, areas_x, areas_y, scale=1):
+    if areas_x < 2:
+        areas_x = 2
+    if areas_y < 2:
+        areas_y = 2
     if scale < 1:
         scale = 1
 
@@ -83,5 +94,5 @@ def draw_passes_sequence(sequence, start_team, areas=5, scale=1):
         i += 1
 
 
-    draw_pitch(ax, areas, scale)
+    draw_pitch(ax, areas_x, areas_y, scale)
     plt.show()
