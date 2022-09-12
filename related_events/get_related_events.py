@@ -1,3 +1,6 @@
+from statsbombpy import sb
+import pandas as pd
+
 def get_related_events(competition_id,season_id,match_id, event_id):
     df = sb.matches(competition_id, season_id)
     #df.to_csv('matches.csv', index=False)
