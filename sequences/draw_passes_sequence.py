@@ -96,3 +96,61 @@ def draw_passes_sequence(sequence, start_team, areas_x, areas_y, scale):
 
     draw_pitch(ax, areas_x, areas_y, scale)
     plt.show()
+
+
+def draw_events_sequence(pass_sequence, start_team, areas_x, areas_y, scale, carrys_sequence=None):
+    if areas_x < 2:
+        areas_x = 2
+    if areas_y < 2:
+        areas_y = 2
+    if scale < 1:
+        scale = 1
+
+    fig, ax = plt.subplots()
+    fig.set_size_inches(7*scale, 5*scale)
+    i = 1
+    
+    team = [team for team in pass_sequence['possession_team']][0]
+    print(f'Team: {team}')
+
+    for index, row in pass_sequence.iterrows():
+        plt.plot(int(row['start_x']*scale), int(row['start_y']*scale), marker='o',
+        markersize=16, markeredgecolor="black", markerfacecolor="black")
+
+        if row['possession_team'] == start_team:
+            plt.plot([int(row['start_x']*scale), int(row['end_x']*scale)],
+            [int(row['start_y']*scale),int(row['end_y']*scale)], color='blue')
+        else:
+            plt.plot([int(row['start_x']*scale), int(row['end_x']*scale)],
+            [int(row['start_y']*scale),int(row['end_y']*scale)], color='red')
+
+        plt.text(int(row['start_x']*scale)-1, int(row['start_y']*scale)-1, i,
+        color='white', fontsize=8)
+        
+        player = row['player']
+        print(f'{i}: {player}')
+
+        i += 1
+
+    if not (carrys_sequence.empty):
+        for index, row in carrys_sequence.iterrows():
+            plt.plot(int(row['start_x']*scale), int(row['start_y']*scale), marker='o',
+            markersize=4, markeredgecolor="red", markerfacecolor="red")
+
+            if row['possession_team'] == start_team:
+                plt.plot([int(row['start_x']*scale), int(row['end_x']*scale)],
+                [int(row['start_y']*scale),int(row['end_y']*scale)], color='green')
+            else:
+                plt.plot([int(row['start_x']*scale), int(row['end_x']*scale)],
+                [int(row['start_y']*scale),int(row['end_y']*scale)], color='green')
+
+            plt.text(int(row['start_x']*scale)-1, int(row['start_y']*scale)-1, i,
+            color='white', fontsize=8)
+            
+            player = row['player']
+            print(f'{i}: {player}')
+
+            i += 1
+
+    draw_pitch(ax, areas_x, areas_y, scale)
+    plt.show()
