@@ -5,7 +5,7 @@ def get_pass_sequences(passes):
     sequence = []
     team = passes['possession_team'][0]
     for index, row in passes.iterrows():
-        if team != row['possession_team']:
+        if team != row['possession_team'] or team != row['team']:
             sequences.append(pd.DataFrame(sequence))
             sequence = []
         sequence.append(row)
