@@ -10,3 +10,7 @@ def get_matches(c_id, s_id):
 def get_events(e_name, m_id):
     events = sb.events(match_id=m_id, split=True, flatten_attrs=False)
     return events[e_name]
+
+match = 3836192
+passes = get_events('passes', match)
+print(passes)
