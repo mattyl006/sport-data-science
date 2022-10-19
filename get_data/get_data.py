@@ -1,4 +1,5 @@
 from statsbombpy import sb
+import pandas as pd
 
 def get_competitions():
     return sb.competitions()
@@ -11,6 +12,38 @@ def get_events(e_name, m_id):
     events = sb.events(match_id=m_id, split=True, flatten_attrs=False)
     return events[e_name]
 
-match = 3836192
-passes = get_events('passes', match)
-print(passes)
+def get_event_json_col_name(event_type):
+    return event_type.lower().replace(' ', '_').replace('*', '')
+
+def get_types_without_json_column(events_dfs):
+    types_without_json_column = set()
+    for event_df in events_dfs:
+        event_type = event_df['type'][0]
+        try:
+            # check if event_df has json event column
+            event_df[get_event_json_col_name(event_type)][0]
+        except:
+            # if not add type to set
+            types_without_json_column.add(event_type)
+    return types_without_json_column
+
+
+def get_merged_events(events_types, match_id):
+    events_dfs = []
+    for event_type in events_types:
+        events_dfs.append(get_events(event_type, match_id))
+
+    types_without_json_column = get_types_without_json_column(events_dfs)
+    
+    events_dfs_renamed = []
+
+    for event_df in events_dfs:
+        event_type = event_df['type'][0]
+        if event_type not in types_without_json_column:
+            events_dfs_renamed.append(event_df.rename(columns={get_event_json_col_name(event_type) : 'event'}))
+        else:
+            events_dfs_renamed.append(event_df)
+
+    events = pd.concat(events_dfs_renamed, ignore_index=True)
+
+    return events.sort_values('index', ignore_index=True)
