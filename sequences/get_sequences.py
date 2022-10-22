@@ -33,3 +33,13 @@ def get_additional_sequences(events_name, sequences):
         additional_sequence = get_additional_sequence(events_name, seq)
         all_sequences.append(pd.DataFrame(additional_sequence))
     return all_sequences
+
+def get_sequence_location(sequence):
+    loc = sequence.location
+    locx = list()
+    locy = list()
+
+    for i in range (0,len(loc)):
+        locx.append(loc.values[i][0])
+        locy.append(loc.values[i][1])
+    return [locx, locy]

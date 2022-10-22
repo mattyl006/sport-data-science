@@ -1,11 +1,14 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
-def draw_pitch(ax, areas_x, areas_y, scale=1):
+def draw_pitch(areas_x, areas_y, scale=1):
     # size of the pitch is 120, 80
     
     X = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T']
     Y = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+    fig, ax = plt.subplots()
+    fig.set_size_inches(7*scale, 5*scale)
 
     #Pitch Outline & Centre Line
     plt.plot([0,0],[0,80*scale], color="black")
@@ -94,7 +97,7 @@ def draw_passes_sequence(sequence, start_team, areas_x, areas_y, scale):
         i += 1
 
 
-    draw_pitch(ax, areas_x, areas_y, scale)
+    draw_pitch(areas_x, areas_y, scale)
     plt.show()
 
 
