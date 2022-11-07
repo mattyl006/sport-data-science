@@ -9,7 +9,7 @@ def custom_scatter(x, y, image, color):
     ### Plots a marker on the image ###
     # TODO - Rotate 180 degrees
     path = None
-    with open(f'icons/{image}') as f:
+    with open(f'drawing/icons/{image}') as f:
         path = parse_svg(f)
         marker = parse_path(path)
 
