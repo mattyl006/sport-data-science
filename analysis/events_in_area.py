@@ -10,23 +10,30 @@ def events_in_area(events_df, team, event):
     start_areas_count = list(set(start_areas_count))
     start_areas_count.sort(key=lambda y: y[0])
 
-    return supply_empty_areas(start_areas_count)
+    return supply_empty_areas(start_areas_count, get_area_codes(12, 8))
 
 
-def supply_empty_areas(start_areas_count):
-    zero_area_count = []
+def get_area_codes(x, y):
+    grid_Xs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    result = []
     i = 1
-    for area_count in start_areas_count:
-        if int(area_count[0][1]) != i:
-            zero_area_count.append(area_count[0][0] + str(i))
-            i = int(area_count[0][1])
+    for area in grid_Xs:
         i += 1
-        if i > 8:
-            i = 1
+        for k in range(y):
+            result.append(area + str(k+1))
+            if k > y:
+                k = 1
+                i += 1
+        if i > x:
+            break
+    return result
 
-    for item in zero_area_count:
-        start_areas_count.append((item, '0%'))
+def supply_empty_areas(start_areas_count, area_codes):
+    areas = [item[0] for item in start_areas_count]
 
+    for code in area_codes:
+        if code not in areas:
+            start_areas_count.append((code, '0%'))
+            
     start_areas_count.sort(key=lambda y: y[0])
-
     return start_areas_count
