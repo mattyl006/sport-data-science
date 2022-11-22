@@ -45,5 +45,6 @@ def get_merged_events(events_types, match_id):
             events_dfs_renamed.append(event_df)
 
     events = pd.concat(events_dfs_renamed, ignore_index=True)
+    events = events.fillna('')
 
     return events.sort_values('index', ignore_index=True)
