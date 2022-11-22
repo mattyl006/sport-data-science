@@ -1,6 +1,6 @@
 from dataframe_modify.grid_areas import add_areas_and_pos
 
-def events_in_area(events_df, team, event):
+def events_in_area(events_df, team, event, areas_x=12, areas_y=8):
     df = events_df[events_df['possession_team'] == team]
     df = df[events_df['type'] == event]
     df = add_areas_and_pos(df)
@@ -10,7 +10,7 @@ def events_in_area(events_df, team, event):
     start_areas_count = list(set(start_areas_count))
     start_areas_count.sort(key=lambda y: y[0])
 
-    return supply_empty_areas(start_areas_count, get_area_codes(12, 8))
+    return supply_empty_areas(start_areas_count, get_area_codes(areas_x, areas_y))
 
 
 def get_area_codes(x, y):
