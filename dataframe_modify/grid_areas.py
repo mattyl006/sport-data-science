@@ -3,7 +3,7 @@ import pandas as pd
 from statsbombpy import sb
 
 grid_Xs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-grid_Ys = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+grid_Ys = [i+1 for i in range(20)]
 
 def get_area_x(loc_x, areas_x):
     for i in range (0,areas_x+1):
@@ -12,9 +12,9 @@ def get_area_x(loc_x, areas_x):
     return "Error in get_area_x!"
 
 def get_area_y(loc_y, areas_y):
-    for i in range (0,areas_y+1):
-        if loc_y <= (80/areas_y)*i and loc_y > (80/areas_y)*(i-1):
-            return grid_Ys[i-1]
+    for i in range (0, areas_y+1):
+        if loc_y <= (areas_y*10) - (i * 10) and loc_y > ((areas_y*10) -10) - (i * 10):
+            return grid_Ys[i]
     return "Error in get_area_y!"
 
 def get_event_area(location, areas_x, areas_y):

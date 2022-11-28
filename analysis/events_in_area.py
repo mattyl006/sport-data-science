@@ -12,7 +12,6 @@ def events_in_area(events_df, team, event, areas_x=12, areas_y=8):
 
     return supply_empty_areas(start_areas_count, get_area_codes(areas_x, areas_y))
 
-
 def get_area_codes(x, y):
     grid_Xs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     result = []
