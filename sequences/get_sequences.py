@@ -12,6 +12,15 @@ def get_event_sequences(events):
         team = row['possession_team']
     return sequences
 
+def get_sequences_by_possession(events):
+    sequences = []
+    sequence = []
+    for i in range(0,len(events)):
+        if (events['possession'] == i).any():
+            sequence = events.loc[events['possession'] == i]
+            sequences.append(pd.DataFrame(sequence))
+    return sequences
+
 def get_first_id(sequence):
     return sequence['index'].iloc[0]
 
