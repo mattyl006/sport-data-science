@@ -31,7 +31,9 @@ def get_types_without_json_column(events_dfs):
 def get_merged_events(events_types, match_id):
     events_dfs = []
     for event_type in events_types:
-        events_dfs.append(get_events(event_type, match_id))
+        df = get_events(event_type, match_id)
+        if len(df) != 0: 
+            events_dfs.append(get_events(event_type, match_id))
 
     types_without_json_column = get_types_without_json_column(events_dfs)
     
