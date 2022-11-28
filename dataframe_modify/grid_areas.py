@@ -29,7 +29,7 @@ def add_areas_and_pos(eventDataFrame, areas_x = 12, areas_y = 8):
         event_start_locations = [[value[0], value[1]] if value != '' else '' for value in eventDataFrame['location'].values]
         event_end_locations = [[value['end_location'][0], value['end_location'][1]] if value != '' and 'end_location' in value.keys() else '' for value in eventDataFrame['event'].values]
 
-        event_end_locations = [[abs(120.0 - float(location[0])), abs(80.0 - float(location[1]))] if team != start_team and location != '' else location for location, team in zip(event_end_locations, eventDataFrame['possession_team'].values)]
+        event_end_locations = [[abs(120.0 - float(location[0])), abs(80.0 - float(location[1]))] if (possesion_team != start_team or team != start_team) and location != '' else location for location, possesion_team, team in zip(event_end_locations, eventDataFrame['possession_team'].values, eventDataFrame['team'].values)]
 
         event_start_areas = [get_event_area(location, areas_x, areas_y) if location != '' else '' for location in event_start_locations]
         event_end_areas = [get_event_area(location, areas_x, areas_y) if location != '' else '' for location in event_end_locations]

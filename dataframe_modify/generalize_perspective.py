@@ -1,9 +1,21 @@
+def swap_condition(start_team, possession_team, team, event_type):
+    if event_type == 'Duel':
+        if  team != start_team:
+            return True
+        else:
+            return False 
+    elif possession_team != start_team:
+        return True
+    elif team != start_team:
+        return True
+    else:
+        return False
+
 def generalize_perspective(eventDataFrame):
     start_team = [team for team in eventDataFrame['possession_team'].values][0]
-    print(eventDataFrame['type'].values)
     new_start_locations = [
         [abs(120.0 - float(location[0])), abs(80.0 - float(location[1]))] 
-            if ((event_type != 'Duel' and possession_team != start_team) or (event_type == 'Duel' and team != start_team)) and location != '' else location 
+            if swap_condition(start_team, possession_team, team, event_type) and location != '' else location 
             for location, possession_team, event_type, team
             in zip(eventDataFrame['location'].values, eventDataFrame['possession_team'].values, eventDataFrame['type'].values, eventDataFrame['team'].values)
     ]
