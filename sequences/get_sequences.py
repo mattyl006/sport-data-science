@@ -1,11 +1,11 @@
 import pandas as pd
 
-def get_sequences_by_possession(events):
+def get_sequences_by_possession(df):
     sequences = []
     sequence = []
-    for i in range(0,len(events)):
-        if (events['possession'] == i).any():
-            sequence = events.loc[events['possession'] == i]
+    for i in range(0,len(df)):
+        if (df['possession'] == i).any():
+            sequence = df.loc[df['possession'] == i]
             sequences.append(pd.DataFrame(sequence))
     return sequences
 
