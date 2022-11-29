@@ -1,5 +1,5 @@
 def swap_condition(start_team, possession_team, team, event_type):
-    if event_type == 'Duel':
+    if event_type == 'Duel' or event_type == 'Interception':
         if  team != start_team:
             return True
         else:
