@@ -3,7 +3,7 @@ import pandas as pd
 def get_sequences_by_possession(df):
     sequences = []
     sequence = []
-    split_events = {'Injury Stoppage', 'Half End'}
+    split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
     prev_possession_team = df['possession_team'][0]
     prev_team = df['team'][0]
     prev_possesion = df['possession'][0]
