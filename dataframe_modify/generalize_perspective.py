@@ -1,34 +1,20 @@
-def swap_condition(start_team, possession_team, team, event_type):
-    if event_type == 'Duel':
-        if  team != start_team:
-            return True
-        else:
-            return False 
-    elif possession_team != start_team:
-        return True
-    elif team != start_team:
-        return True
-    else:
-        return False
+def swap_perspective(sequence, start_team):
+    new_sequence = sequence
+    new_start_xs = [abs(120.0 - float(start_x)) if start_x != '' and team != start_team else start_x 
+                    for start_x, team in zip(sequence['start_x'].values, sequence['team'].values)]
+    new_start_ys = [abs(80.0 - float(start_y)) if start_y != '' and team != start_team else start_y 
+                    for start_y, team in zip(sequence['start_y'].values, sequence['team'].values)]
+    new_end_xs = [abs(120.0 - float(end_x)) if end_x != '' and team != start_team else end_x 
+                    for end_x, team in zip(sequence['end_x'].values, sequence['team'].values)]
+    new_end_ys = [abs(80.0 - float(end_y)) if end_y != '' and team != start_team else end_y 
+                    for end_y, team in zip(sequence['end_y'].values, sequence['team'].values)]
+    new_sequence['start_x'] = new_start_xs
+    new_sequence['start_y'] = new_start_ys
+    new_sequence['end_x'] = new_end_xs
+    new_sequence['end_y'] = new_end_ys
+    return new_sequence
 
-def generalize_perspective(eventDataFrame):
-    start_team = [team for team in eventDataFrame['possession_team'].values][0]
-    new_start_locations = [
-        [abs(120.0 - float(location[0])), abs(80.0 - float(location[1]))] 
-            if swap_condition(start_team, possession_team, team, event_type) and location != '' else location 
-            for location, possession_team, event_type, team
-            in zip(eventDataFrame['location'].values, eventDataFrame['possession_team'].values, eventDataFrame['type'].values, eventDataFrame['team'].values)
-    ]   
-    newEventDataFrame = eventDataFrame
-    newEventDataFrame['location'] = new_start_locations
-    return newEventDataFrame
-
-# def swap_perspective(sequence, start_team):
-#     seq_team = [team for team in sequence['possession_team'].values][0]
-#     if start_team != seq_team:
-#         new_start_locations = [
-#             [abs(120.0 - float(location[0])), abs(80.0 - float(location[1]))] 
-#                 for location in sequence['location'].values]
-#     newSequence = sequence
-#     newSequence['location'] = new_start_locations
-#     return newSequence
+def generalize_perspective(sequences):
+    start_team = [team for team in sequences[0]['possession_team'].values][0]
+    new_sequences = [swap_perspective(sequence, start_team) for sequence in sequences]
+    return new_sequences

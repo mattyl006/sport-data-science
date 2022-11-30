@@ -24,7 +24,7 @@ def get_last_id(sequence):
     return sequence['index'].iloc[-1]
 
 def get_sequence_location(sequence):
-    loc = sequence.location
+    loc = [sequence.start_x, sequence.start_y]
     locx = list()
     locy = list()
 
