@@ -62,6 +62,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
     if scale < 1:
         scale = 1
 
+    events_without_location = {'Injury Stoppage', 'Half End'}
     fig, ax = plt.subplots()
     fig.set_size_inches(7*scale, 5*scale)
     i = 0
@@ -75,17 +76,20 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
             player = row['player']
             i+=1
         
-        type = row['type']
+        event_type = row['type']
         timespamp = row['timestamp']
             
-        print(f'{i}: {player} ({type}) <{timespamp}>')
+        print(f'{i}: {player} ({event_type}) <{timespamp}>')
 
         if row['team'] == start_team:
             general_color = 'blue'
         else:
             general_color = 'red'
 
-        start = (float(row['start_x']*scale), float(row['start_y']*scale))
+        if event_type in events_without_location:
+            start = (60.0, 40.0)
+        else:
+            start = (float(row['start_x']*scale), float(row['start_y']*scale))
 
         if row['end_x'] != '' and row['end_y'] != '':
             end = (float(row['end_x']*scale), float(row['end_y']*scale))
