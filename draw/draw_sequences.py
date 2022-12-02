@@ -15,6 +15,9 @@ def draw_pitch(ax, x_areas=12, y_areas=8, scale=1):
     for i in range (0,x_areas):
         plt.text((((60/x_areas)+i*120/x_areas)-1)*scale, 82*scale, str(X[i]), fontsize=8*scale)
 
+    for i in range (0,y_areas):
+        plt.text(-3*scale, (80 * scale) - (5.5 * scale) - (i * 10 * scale), str(Y[i]), fontsize=8*scale)
+
     # Left Penalty Area
     plt.plot([14.6*scale,14.6*scale],[57.8*scale,22.2*scale],color="black")
     plt.plot([0,14.6*scale],[57.8*scale,57.8*scale],color="black")

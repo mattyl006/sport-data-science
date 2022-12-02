@@ -28,6 +28,3 @@ def add_grid_areas(df, x_areas = 12, y_areas = 8):
     df['end_area'] = event_end_areas
     df['area_code'] = event_area_codes
     return df
-
-def add_grid_areas_sequences(sequences, x_areas = 12, y_areas = 8):
-    return [add_grid_areas(sequence, x_areas, y_areas) for sequence in sequences]
