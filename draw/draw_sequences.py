@@ -111,6 +111,22 @@ def draw_events_sequence(sequence, start_team, areas_x, areas_y, scale):
             case 'Shot':
                 plt.plot([start[0], end[0]], [start[1], end[1]], color='yellow', linewidth=scale)
                 plt.plot(start[0], start[1], marker='o', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
+            case 'Block':
+                plt.plot(start[0], start[1], marker='X', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="maroon")
+            case 'Ball Recovery':
+                plt.plot(start[0], start[1], marker='D', markersize=7*scale, markeredgecolor=general_color, markerfacecolor="darkgreen")
+            case 'Miscontrol':
+                plt.plot(start[0], start[1], marker='H', markersize=9*scale, markeredgecolor=general_color, markerfacecolor="coral")
+            case 'Interception':
+                plt.plot(start[0], start[1], marker='p', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="sienna")
+            case 'Dribble':
+                plt.plot(start[0], start[1], marker="$D$", markersize=8*scale, markeredgecolor=general_color, markerfacecolor="gold")
+            case 'Clearance':
+                plt.plot(start[0], start[1], marker='s', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="fuchsia")
+            case 'Foul Committed':
+                plt.plot(start[0], start[1], marker="$F$", markersize=8*scale, markeredgecolor="orangered", markerfacecolor="orangered")
+            case 'Foul Won':
+                plt.plot(start[0], start[1], marker="$F$", markersize=8*scale, markeredgecolor="olive", markerfacecolor="olive")
             case _:
                 plt.plot(start[0], start[1], marker='1', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
             
