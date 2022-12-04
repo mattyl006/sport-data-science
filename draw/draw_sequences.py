@@ -78,27 +78,21 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
         if player != row['player']:
             player = row['player']
             i+=1
-        
         event_type = row['type']
         timespamp = row['timestamp']
-            
         print(f'{i}: {player} ({event_type}) <{timespamp}>')
-
         if row['team'] == start_team:
             general_color = 'blue'
         else:
             general_color = 'red'
-
         if event_type in events_without_location:
             start = (60.0, 40.0)
         else:
             start = (float(row['start_x']*scale), float(row['start_y']*scale))
-
         if row['end_x'] != '' and row['end_y'] != '':
             end = (float(row['end_x']*scale), float(row['end_y']*scale))
         else:
             end = start
-
         match row['type']:
             case 'Ball Receipt*':
                 plt.plot(start[0], start[1], marker='.', markersize=8*scale, markeredgecolor=general_color, markerfacecolor=general_color)
@@ -133,7 +127,8 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
                 plt.plot(start[0], start[1], marker="$F$", markersize=8*scale, markeredgecolor="olive", markerfacecolor="olive")
             case _:
                 plt.plot(start[0], start[1], marker='1', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
-            
+        for location in row['context_locations']:
+            plt.plot(location[0], location[1], marker='o', markersize=6*scale, markeredgecolor=general_color, markerfacecolor="pink")
         plt.text(start[0]-(scale/2), start[1]-(scale/2), str(i), color='white', fontsize=4*scale)
 
     draw_pitch(ax, x_areas, y_areas, scale)
