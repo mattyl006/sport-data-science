@@ -36,9 +36,11 @@ def generalize_perspective(df, start_team):
                     for end_x, team in zip(df['end_x'].values, df['team'].values)]
     new_end_ys = [abs(80.0 - float(end_y)) if end_y != '' and team != start_team else end_y 
                     for end_y, team in zip(df['end_y'].values, df['team'].values)]
+
     new_context_locations = [[location if teammate or location == '' else [abs(120.0 - location[0]), abs(80.0 - location[1])]
         for location, teammate in zip(context_locations, teammate_locations)] for context_locations, teammate_locations 
         in zip(df['context_locations'].values, df['teammate_locations'].values)]
+
     new_df['start_x'] = new_start_xs
     new_df['start_y'] = new_start_ys
     new_df['end_x'] = new_end_xs

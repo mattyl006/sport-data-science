@@ -128,12 +128,12 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
             case _:
                 plt.plot(start[0], start[1], marker='1', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
         for location, teammate in zip(row['context_locations'] , row['teammate_locations']):
-            if teammate:
-                team_color = 'blue'
-            else:
-                team_color = 'red'
-            plt.plot(location[0], location[1], marker='o', markersize=6*scale, markeredgecolor="pink", markerfacecolor=team_color)
+            if len(location) > 0 and location != '':
+                if teammate:
+                    team_color = 'blue'
+                else:
+                    team_color = 'red'
+                plt.plot(location[0]*scale, location[1]*scale, marker='o', markersize=6*scale, markeredgecolor="pink", markerfacecolor=team_color)
         plt.text(start[0]-(scale/2), start[1]-(scale/2), str(i), color='white', fontsize=4*scale)
-
     draw_pitch(ax, x_areas, y_areas, scale)
     plt.show()
