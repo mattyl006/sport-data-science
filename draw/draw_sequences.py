@@ -132,14 +132,20 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
     reversed_sequence = sequence[::-1]
     context_drown = False
     for _, row in reversed_sequence.iterrows():
-        for location, teammate in zip(row['context_locations'], row['teammate_locations']):
+        for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
             if len(location) > 0 and location != '':
-                if teammate:
-                    team_color = 'blue'
-                else:
+                if team != start_team and teammate:
                     team_color = 'red'
-                plt.plot(location[0]*scale, location[1]*scale, 
-                marker='o', markersize=6*scale, markeredgecolor="pink", markerfacecolor=team_color)
+                elif team == start_team and not teammate:
+                    team_color = 'red'
+                else:
+                    team_color = 'blue'
+                if actor:
+                    plt.plot(location[0]*scale, location[1]*scale, 
+                    marker='o', markersize=7*scale, markeredgecolor="yellow", markerfacecolor=team_color)
+                else:
+                    plt.plot(location[0]*scale, location[1]*scale, 
+                    marker='o', markersize=6*scale, markeredgecolor="pink", markerfacecolor=team_color)
                 context_drown = True
         if context_drown:
             break
