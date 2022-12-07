@@ -133,13 +133,35 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
     context_drown = False
     for _, row in reversed_sequence.iterrows():
         for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
-            if len(location) > 0 and location != '':
+            if len(location) > 0 and location != '': #and True in row['actor_locations']
                 if team != start_team and teammate:
                     team_color = 'red'
                 elif team == start_team and not teammate:
                     team_color = 'red'
                 else:
                     team_color = 'blue'
+                # if team != start_team:
+                #     if teammate:        
+                #         if event_type in ['Duel', 'Ball Receipt*']:
+                #             team_color = 'blue'
+                #         else:
+                #             team_color = 'red'
+                #     else:
+                #         if event_type in ['Duel', 'Ball Receipt*']:
+                #             team_color = 'red'
+                #         else:
+                #             team_color = 'blue'
+                # else:
+                #     if teammate:
+                #         if event_type in ['Duel', 'Ball Receipt*']:
+                #             team_color = 'red'
+                #         else:
+                #             team_color = 'blue'
+                #     else:
+                #         if event_type in ['Duel', 'Ball Receipt*']:
+                #             team_color = 'blue'
+                #         else:
+                #             team_color = 'red'
                 if actor:
                     plt.plot(location[0]*scale, location[1]*scale, 
                     marker='o', markersize=7*scale, markeredgecolor="yellow", markerfacecolor=team_color)
@@ -152,3 +174,9 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1):
 
     draw_pitch(ax, x_areas, y_areas, scale)
     plt.show()
+
+
+# def swap_ctx_loc_condition(team, start_team, event_type):
+#     if team != start_team:
+#         return not event_type in ['Duel', 'Ball Receipt*']
+#     return event_type in ['Duel', 'Ball Receipt*']
