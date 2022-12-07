@@ -41,7 +41,7 @@ def generalize_perspective(df, start_team):
                     for end_x, team in zip(df['end_x'].values, df['team'].values)]
     new_end_ys = [(80.0 - float(end_y)) if end_y != '' and team != start_team else end_y 
                     for end_y, team in zip(df['end_y'].values, df['team'].values)]
-    new_context_locations = [[[(120.0 - location[0]), (80.0 - location[1]), 'elo'] 
+    new_context_locations = [[[(120.0 - location[0]), (80.0 - location[1]), 'old' , location[1]] 
         if swap_ctx_loc_condition(team, start_team, event_type) else location
         for location in context_locations] for context_locations, team, event_type
         in zip(df['context_locations'].values, df['team'].values, df['type'].values)]

@@ -50,3 +50,6 @@ def get_merged_events(events_types, match_id):
     events = events.fillna('')
 
     return events.sort_values('index', ignore_index=True)
+
+def get_sb360(match_id):
+    return sb.frames(match_id, fmt='dataframe')
