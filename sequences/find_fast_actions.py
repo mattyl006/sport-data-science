@@ -26,3 +26,14 @@ def find_fast_actions(sequences, team, start_team, half, max_timestamp=5000):
             if start_area[0] in team_half and end_area[0] not in team_half and timestamp_diff < max_timestamp:
                 fast_attact_sequences.append(s)
     return fast_attact_sequences
+
+# Klasyfikacja szybkich ataków
+# W momencie kluczowego długiego podania brać lokalizacje przeciwników na przecięciu (po drodze) tego podania
+# Badając w ten sposób czy podanie było "trudne" czy "łatwe"
+# Jeśli trudne i się udało to odpowiednio wynagrodzić
+# Jeśli trudne i się nie udało to mniej wynagrodzić
+# Jeśli łatwe i nieudane to kara
+# Jeśli łatwe i udane to wynagrodzić ale mniej niż to pierwsze
+# Jeśli podanie zostanie przyjęte i po nim jest wysoki pressing to mniej wynagrodzić
+# Jeśli podanie zostanie przyjęte i jest dużo otwartej przestrzeni to jeszcze bardziej wynagrodzić
+# Jeśli przyjęcie będzie do stopy to bardziej wynagrodzić (?)
