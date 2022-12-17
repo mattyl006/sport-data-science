@@ -3,7 +3,7 @@ from dataframe_modify.swap_perspective import swap_x
 from sequences.split_sequences_by_half import split_sequences_by_half
 from dataframe_modify.grid_areas import add_grid_areas
 
-def find_fast_actions(sequences, team, start_team, half, max_timestamp=5000):
+def find_fast_actions(sequences, team, start_team, half, max_timestamp=15000):
     fast_attact_sequences = []
     sequences = split_sequences_by_half(sequences)[half - 1]
     if team == start_team and half == 1:
