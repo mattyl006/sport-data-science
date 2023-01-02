@@ -18,6 +18,15 @@ def get_sequences_by_possession(df):
         prev_team = row['team']
     return sequences
 
+def get_corners_sequences(df):
+    sequences = []
+    sequence = []
+    for i in range(0,len(df)):
+        if ((df['possession'] == i) & (df['play_pattern'] == 'From Corner')).any():
+            sequence = df.loc[df['possession'] == i]        
+            sequences.append(pd.DataFrame(sequence))
+    return sequences
+
 def get_first_id(sequence):
     return sequence['index'].iloc[0]
 
