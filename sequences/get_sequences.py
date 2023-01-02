@@ -27,6 +27,15 @@ def get_corners_sequences(df):
             sequences.append(pd.DataFrame(sequence))
     return sequences
 
+
+def get_sequence_by_time(sequences, period, minute, second):
+    for i in range (0,len(sequences)):
+        if ((sequences[i]['period'] == period) & (sequences[i]['minute'] >= minute) & (sequences[i]['second'] >= second)).any():
+            return sequences[i]
+    print('Exception in get_sequence_by_time! Bad timestamp probably!')
+
+        
+
 def get_first_id(sequence):
     return sequence['index'].iloc[0]
 
