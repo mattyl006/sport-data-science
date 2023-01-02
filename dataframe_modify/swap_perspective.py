@@ -27,9 +27,10 @@ def swap_x(df):
     return new_df
 
 def swap_ctx_loc_condition(team, start_team, event_type):
+    swap_event_list = ['Duel', 'Ball Receipt*', 'Foul Committed', 'Foul Won', 'Injury Stoppage']
     if team != start_team:
-        return not event_type in ['Duel', 'Ball Receipt*', 'Foul Committed', 'Foul Won', 'Injury Stoppage']
-    return event_type in ['Duel', 'Ball Receipt*', 'Foul Committed', 'Foul Won', 'Injury Stoppage']
+        return not event_type in swap_event_list
+    return event_type in swap_event_list
 
 def generalize_perspective(df, start_team):
     new_df = df
