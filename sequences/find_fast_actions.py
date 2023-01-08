@@ -37,3 +37,6 @@ def find_fast_actions(sequences, team, start_team, half, max_timestamp=15000):
 # Jeśli podanie zostanie przyjęte i po nim jest wysoki pressing to mniej wynagrodzić
 # Jeśli podanie zostanie przyjęte i jest dużo otwartej przestrzeni to jeszcze bardziej wynagrodzić
 # Jeśli przyjęcie będzie do stopy to bardziej wynagrodzić (?)
+
+# Zwizualizować jakie odległości od jakich zawodników są brane pod uwagę
+# Wyprintować więcej sytuacji, szczególnie gdy podanie jest na ukos, a nie w prostej linii
