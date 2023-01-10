@@ -4,27 +4,49 @@ def get_sequences_by_possession(df):
     sequences = []
     sequence = []
     split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
-    prev_possession_team = df['possession_team'][0]
     prev_team = df['team'][0]
+    prev_possession_team = df['possession_team'][0]
     prev_possesion = df['possession'][0]
     for _, row in df.iterrows():
-        if row['type'] in split_events or (row['team'] != prev_team or row['possession_team'] != prev_possession_team) and row['possession'] != prev_possesion:
+        if row['type'] in split_events:
+            if len(sequence) != 0:
+                sequence.append(row)
+                sequences.append(pd.DataFrame(sequence))
+                sequence = []
+            continue
+        elif (row['possession_team'] != prev_possession_team or row['team'] != prev_team) and row['possession'] != prev_possesion:
             sequences.append(pd.DataFrame(sequence))
             sequence = []
         sequence.append(row)
+        prev_team = row['team']
         prev_possesion = row['possession']
         prev_possession_team = row['possession_team']
-        prev_team = row['team']
     return sequences
 
-def get_corners_sequences(df):
-    sequences = []
-    sequence = []
-    for i in range(0,len(df)):
-        if ((df['possession'] == i) & (df['play_pattern'] == 'From Corner')).any():
-            sequence = df.loc[df['possession'] == i]        
-            sequences.append(pd.DataFrame(sequence))
-    return sequences
+def get_corners_sequences(sequences):
+    # return [sequence for sequence in sequences if (sequence['play_pattern'] == 'From Corner').any()]
+    arr = []
+    print(len(sequences))
+    for i, sequence in enumerate(sequences):
+        try:
+            if (sequence['play_pattern'] == 'From Corner').any():
+                arr.append(sequence)
+        except:
+            print(sequence)
+            print(i)
+        
+    return arr
+
+
+
+# def get_corners_sequences(df):
+#     sequences = []
+#     sequence = []
+#     for i in range(0,len(df)):
+#         if ((df['possession'] == i) & (df['play_pattern'] == 'From Corner')).any():
+#             sequence = df.loc[df['possession'] == i]        
+#             sequences.append(pd.DataFrame(sequence))
+#     return sequences
 
 
 def get_sequence_by_time(sequences, period, minute, second):
