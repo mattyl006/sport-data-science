@@ -86,7 +86,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
         else:
             general_color = 'red'
         if event_type in events_without_location:
-            start = (60.0, 40.0)
+            continue
         else:
             start = (float(row['start_x']*scale), float(row['start_y']*scale))
         if row['end_x'] != '' and row['end_y'] != '':

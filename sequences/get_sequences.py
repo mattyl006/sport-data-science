@@ -8,10 +8,9 @@ def get_sequences_by_possession(df):
     prev_team = df['team'][0]
     prev_possesion = df['possession'][0]
     for _, row in df.iterrows():
-        if row['team'] != prev_team or row['possession_team'] != prev_possession_team:
-            if row['possession'] != prev_possesion or row['type'] in split_events:
-                sequences.append(pd.DataFrame(sequence))
-                sequence = []
+        if row['type'] in split_events or (row['team'] != prev_team or row['possession_team'] != prev_possession_team) and row['possession'] != prev_possesion:
+            sequences.append(pd.DataFrame(sequence))
+            sequence = []
         sequence.append(row)
         prev_possesion = row['possession']
         prev_possession_team = row['possession_team']
