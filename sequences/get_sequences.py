@@ -7,6 +7,7 @@ def get_sequences_by_possession(df):
     prev_team = df['team'][0]
     prev_possession_team = df['possession_team'][0]
     prev_possesion = df['possession'][0]
+
     for _, row in df.iterrows():
         if row['type'] in split_events:
             if len(sequence) != 0:
@@ -15,18 +16,20 @@ def get_sequences_by_possession(df):
                 sequence = []
             continue
         elif (row['possession_team'] != prev_possession_team or row['team'] != prev_team) and row['possession'] != prev_possesion:
-            sequences.append(pd.DataFrame(sequence))
-            sequence = []
+            if len(sequence) != 0:
+                sequences.append(pd.DataFrame(sequence))
+                sequence = []
         sequence.append(row)
         prev_team = row['team']
         prev_possesion = row['possession']
         prev_possession_team = row['possession_team']
+
     return sequences
 
 def get_corners_sequences(sequences):
     # return [sequence for sequence in sequences if (sequence['play_pattern'] == 'From Corner').any()]
     arr = []
-    print(len(sequences))
+    # print(len(sequences))
     for i, sequence in enumerate(sequences):
         try:
             if (sequence['play_pattern'] == 'From Corner').any():
