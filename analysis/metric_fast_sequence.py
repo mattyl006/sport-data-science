@@ -38,3 +38,6 @@ def metric_fast_sequence(df, team, start_team, half):
     if enemy_locations is None:
         enemy_locations = []
     return scores, enemy_locations
+
+# nie <20 tylko uzależnić od długości podania np. połowa długości podania
+# zrobić odcinek nie prostą
