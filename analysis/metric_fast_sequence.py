@@ -34,11 +34,10 @@ def metric_fast_sequence(df, team, start_team, half):
             for location in enemy_locations]
         print(distances)
         scores = [round(1/distance, 6) for distance in distances]
-    if scores is None:
-        scores = []
-    if enemy_locations is None:
-        enemy_locations = []
-    return scores, enemy_locations
+    counterattack_pass_id = None
+    if counterattack_pass is not None:
+        counterattack_pass_id = counterattack_pass.id.values[0]
+    return scores, enemy_locations, counterattack_pass_id
 
 # nie <20 tylko uzależnić od długości podania np. połowa długości podania
 # zrobić odcinek nie prostą

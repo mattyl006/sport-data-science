@@ -57,7 +57,7 @@ def draw_pitch(ax, x_areas=12, y_areas=8, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False):
+def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False, counterattack_pass_id=None):
     if x_areas < 2:
         x_areas = 2
     if y_areas < 2:
@@ -100,7 +100,12 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             case 'Duel':
                 plt.plot(start[0], start[1], marker='v', markersize=8*scale, markeredgecolor=general_color, markerfacecolor=general_color)
             case 'Pass':
-                plt.plot([start[0], end[0]], [start[1], end[1]], color=general_color, linewidth=scale)
+                print(counterattack_pass_id)
+                print(row['id'])
+                if row['id'] == counterattack_pass_id:
+                    plt.plot([start[0], end[0]], [start[1], end[1]], color='orange', linewidth=scale)
+                else:
+                    plt.plot([start[0], end[0]], [start[1], end[1]], color=general_color, linewidth=scale)
                 plt.plot(start[0], start[1], marker='o', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
             case 'Carry':
                 plt.plot([start[0], end[0]], [start[1], end[1]], color='green', linewidth=scale)
