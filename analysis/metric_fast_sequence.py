@@ -1,4 +1,4 @@
-from analysis.distance_from_line import distance_from_line
+from analysis.distance_from_line import dist
 
 def metric_fast_sequence(df, team, start_team, half):
     counterattack_pass = None
@@ -25,11 +25,12 @@ def metric_fast_sequence(df, team, start_team, half):
         counterattack_pass_path = [(counterattack_pass.start_x.values[0], counterattack_pass.start_y.values[0]),
         (counterattack_pass.end_x.values[0], counterattack_pass.end_y.values[0])]
 
-        enemy_locations = [location if distance_from_line(counterattack_pass_path[0], 
-        counterattack_pass_path[1], location) < 20 else '' for location in enemy_locations]
+        enemy_locations = [location if dist(counterattack_pass_path[0][0], counterattack_pass_path[0][1] 
+        ,counterattack_pass_path[1][0], counterattack_pass_path[1][1],  location[0], location[1]) < 20 else '' for location in enemy_locations]
         enemy_locations = list(filter(lambda a: a != '', enemy_locations))
 
-        distances = [distance_from_line(counterattack_pass_path[0], counterattack_pass_path[1], location)
+        distances = [dist(counterattack_pass_path[0][0], counterattack_pass_path[0][1] 
+        ,counterattack_pass_path[1][0], counterattack_pass_path[1][1],  location[0], location[1])
             for location in enemy_locations]
         print(distances)
         scores = [round(1/distance, 6) for distance in distances]

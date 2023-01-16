@@ -57,7 +57,7 @@ def draw_pitch(ax, x_areas=12, y_areas=8, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, scores=[], scores_locations=[], pdf=False):
+def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False):
     if x_areas < 2:
         x_areas = 2
     if y_areas < 2:
@@ -86,7 +86,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, s
         else:
             general_color = 'red'
         if event_type in events_without_location:
-            start = (60.0, 40.0)
+            continue
         else:
             start = (float(row['start_x']*scale), float(row['start_y']*scale))
         if row['end_x'] != '' and row['end_y'] != '':
@@ -129,9 +129,11 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, s
                 plt.plot(start[0], start[1], marker='1', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
         plt.text(start[0]-(scale/2), start[1]-(scale/2), str(i), color='white', fontsize=4*scale)
 
-    reversed_sequence = sequence[::-1]
+    if not first_event_360: #reverse sequence
+        sequence = sequence[::-1]
+    
     context_drown = False
-    for _, row in reversed_sequence.iterrows():
+    for _, row in sequence.iterrows():
         for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
             if len(location) > 0 and location != '': #and True in row['actor_locations']
                 if team != start_team and teammate:
@@ -165,4 +167,11 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, s
 
     draw_pitch(ax, x_areas, y_areas, scale)
     plt.show()
-    return plt
+
+
+# def swap_ctx_loc_condition(team, start_team, event_type):
+#     if team != start_team:
+#         return not event_type in ['Duel', 'Ball Receipt*']
+#     return event_type in ['Duel', 'Ball Receipt*']
+
+
