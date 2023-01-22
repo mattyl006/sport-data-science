@@ -32,7 +32,7 @@ def metric_fast_sequence(df, team, start_team, half):
         distances = [dist(counterattack_pass_path[0][0], counterattack_pass_path[0][1] 
         ,counterattack_pass_path[1][0], counterattack_pass_path[1][1],  location[0], location[1])
             for location in enemy_locations]
-        print(distances)
+
         scores = [round(1/distance, 6) for distance in distances]
     counterattack_pass_id = None
     if counterattack_pass is not None:

@@ -73,6 +73,10 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
     player = ''
     
     print(f'Team: {team}')
+    if pdf:
+        text = f'Team: {team}'
+        text = text.encode('latin-1', 'replace').decode('latin-1')
+        pdf.cell(200, 10, txt = text, ln = 1, align = 'L')
 
     for _, row in sequence.iterrows():
         if player != row['player']:
@@ -80,7 +84,14 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             i+=1
         event_type = row['type']
         timespamp = row['timestamp']
+
         print(f'{i}: {player} ({event_type}) <{timespamp}>')
+
+        if pdf:
+            text = f'{i}: {player} ({event_type}) <{timespamp}>'
+            text = text.encode('latin-1', 'replace').decode('latin-1')
+            pdf.cell(200, 10, txt = text, ln = 1, align = 'L')
+
         if row['team'] == start_team:
             general_color = 'blue'
         else:
@@ -100,8 +111,6 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             case 'Duel':
                 plt.plot(start[0], start[1], marker='v', markersize=8*scale, markeredgecolor=general_color, markerfacecolor=general_color)
             case 'Pass':
-                print(counterattack_pass_id)
-                print(row['id'])
                 if row['id'] == counterattack_pass_id:
                     plt.plot([start[0], end[0]], [start[1], end[1]], color='orange', linewidth=scale)
                 else:
@@ -171,12 +180,6 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             plt.text(loc[0]*scale-(4*scale), loc[1]*scale-(2.5*scale), score, color='black', fontsize=5*scale)
 
     draw_pitch(ax, x_areas, y_areas, scale)
-    plt.show()
-
-
-# def swap_ctx_loc_condition(team, start_team, event_type):
-#     if team != start_team:
-#         return not event_type in ['Duel', 'Ball Receipt*']
-#     return event_type in ['Duel', 'Ball Receipt*']
-
+    plt.savefig('seq.png')
+    # plt.show()
 
