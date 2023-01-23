@@ -61,7 +61,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
     if x_areas < 2:
         x_areas = 2
     if y_areas < 2:
-        y_areas = 2
+        y_areas = 1
     if scale < 1:
         scale = 1
 
