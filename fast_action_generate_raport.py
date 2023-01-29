@@ -76,11 +76,11 @@ scores  = [metric_fast_sequence(s, team_1, team_1, 1) for s in fast_attact_team_
 generate_pdf(fast_attact_team_1, scores, team_1, 1, pdf, start=True)
 
 fast_attact_team_2 = find_fast_actions(sequences=sequences, team=team_2, start_team=team_1, half=1)
-scores  = [metric_fast_sequence(df=s, team=team_2, start_team=team_1, half=1) for s in fast_attact_team_1]
+scores  = [metric_fast_sequence(df=s, team=team_2, start_team=team_1, half=1) for s in fast_attact_team_2]
 generate_pdf(fast_attact_team_2, scores, team_2, 1, pdf)
 
 fast_attact_team_1_2 = find_fast_actions(sequences=sequences, team=team_1, start_team=team_1, half=2)
-scores  = [metric_fast_sequence(df=s, team=team_1, start_team=team_1, half=2) for s in fast_attact_team_1]
+scores  = [metric_fast_sequence(df=s, team=team_1, start_team=team_1, half=2) for s in fast_attact_team_1_2]
 generate_pdf(fast_attact_team_1_2, scores, team_1, 2, pdf)
 
 fast_attact_team_2_2 = find_fast_actions(sequences=sequences, team=team_2, start_team=team_1, half=2)
