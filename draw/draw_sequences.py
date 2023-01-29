@@ -75,8 +75,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
     print(f'Team: {team}')
     if pdf:
         text = f'Team: {team}'
-        text = text.encode('latin-1', 'replace').decode('latin-1')
-        pdf.cell(200, 10, txt = text, ln = 1, align = 'L')
+        pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
 
     for _, row in sequence.iterrows():
         if player != row['player']:
@@ -89,8 +88,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
 
         if pdf:
             text = f'{i}: {player} ({event_type}) <{timespamp}>'
-            text = text.encode('latin-1', 'replace').decode('latin-1')
-            pdf.cell(200, 10, txt = text, ln = 1, align = 'L')
+            pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
 
         if row['team'] == start_team:
             general_color = 'blue'
@@ -181,5 +179,6 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
 
     draw_pitch(ax, x_areas, y_areas, scale)
     plt.savefig('seq.png')
-    # plt.show()
+    if not pdf:
+        plt.show()
 
