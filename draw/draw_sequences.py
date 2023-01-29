@@ -57,7 +57,7 @@ def draw_pitch(ax, x_areas=12, y_areas=8, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False, counterattack_pass_id=None):
+def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False, counterattack_pass_id=None, image_name=None):
     if x_areas < 2:
         x_areas = 2
     if y_areas < 2:
@@ -178,7 +178,7 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             plt.text(loc[0]*scale-(4*scale), loc[1]*scale-(2.5*scale), score, color='black', fontsize=5*scale)
 
     draw_pitch(ax, x_areas, y_areas, scale)
-    plt.savefig('seq.png')
+    plt.savefig(image_name)
     if not pdf:
         plt.show()
 

@@ -14,6 +14,7 @@ from get_data.get_data import get_matches
 import fpdf
 import os
 import sys
+import time
 
 def generate_pdf(sequences, scores, team, half, pdf, start=False):
     for i, seq, score in zip(range(len(sequences)), sequences, scores):
@@ -22,14 +23,16 @@ def generate_pdf(sequences, scores, team, half, pdf, start=False):
             text = f'Raport szybkich/kontraatakujących sekwencji z meczu {home_team}-{away_team}_{match_date}'
             pdf.cell(0, 8, txt = text, ln = 1, align = 'C')
         if i == 0:
-            text = f"{team} - polowa:{half}"
+            text = f"{team} - połowa: {half}"
             pdf.cell(0, 8, txt = text, ln = 1, align = 'C')
         text = f'{home_team} - {away_team} ({match_date})'
         pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
-        text = f'sequence {i}'
+        text = f'sekwencja: {i}'
         pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
-        draw_events_sequence(seq, team_1, 12, 8, scale=2, scores=score[0], scores_locations=score[1], counterattack_pass_id=score[2], pdf=pdf)
-        pdf.image('seq.png', x=-20, w = 220, h = 140, type = 'PNG')
+        image_name = f"seq-{team}-{half}-{i}.png"
+        draw_events_sequence(seq, team_1, 12, 8, scale=2, scores=score[0], scores_locations=score[1], counterattack_pass_id=score[2], pdf=pdf, image_name=image_name)
+        time.sleep(1)
+        pdf.image(image_name, x=-20, w = 220, h = 140, type = 'PNG')
 
 if len(sys.argv) > 1:
     MATCH_ID = int(sys.argv[1])
