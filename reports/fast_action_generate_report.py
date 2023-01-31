@@ -31,7 +31,6 @@ def generate_pdf(sequences, scores, team, half, pdf, start=False):
         pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
         image_name = f"seq-{team}-{half}-{i}.png"
         draw_events_sequence(seq, team_1, 12, 8, scale=2, scores=score[0], scores_locations=score[1], counterattack_pass_id=score[2], pdf=pdf, image_name=image_name)
-        time.sleep(1)
         pdf.image(image_name, x=-20, w = 220, h = 140, type = 'PNG')
 
 if len(sys.argv) > 1:
@@ -87,3 +86,7 @@ fast_attact_team_2_2 = find_fast_actions(sequences=sequences, team=team_2, start
 scores  = [metric_fast_sequence(df=s, team=team_2, start_team=team_1, half=2) for s in fast_attact_team_2_2]
 generate_pdf(fast_attact_team_2_2, scores, team_2, 2, pdf)
 pdf.output(f"{home_team}-{away_team}_{match_date}.pdf")
+
+for file in os.listdir('.'):
+    if file.endswith('.png'):
+        os.remove(file)
