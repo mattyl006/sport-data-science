@@ -57,7 +57,7 @@ def draw_pitch(ax, x_areas=12, y_areas=8, scale=1):
     ax.add_patch(leftPenSpot)
     ax.add_patch(rightPenSpot)
 
-def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False):
+def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, first_event_360=False, scores=[], scores_locations=[], pdf=False, counterattack_pass_id=None, image_name=None):
     if x_areas < 2:
         x_areas = 2
     if y_areas < 2:
@@ -73,6 +73,9 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
     player = ''
     
     print(f'Team: {team}')
+    if pdf:
+        text = f'Team: {team}'
+        pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
 
     for _, row in sequence.iterrows():
         if player != row['player']:
@@ -80,7 +83,13 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             i+=1
         event_type = row['type']
         timespamp = row['timestamp']
+
         print(f'{i}: {player} ({event_type}) <{timespamp}>')
+
+        if pdf:
+            text = f'{i}: {player} ({event_type}) <{timespamp}>'
+            pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
+
         if row['team'] == start_team:
             general_color = 'blue'
         else:
@@ -100,7 +109,10 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
             case 'Duel':
                 plt.plot(start[0], start[1], marker='v', markersize=8*scale, markeredgecolor=general_color, markerfacecolor=general_color)
             case 'Pass':
-                plt.plot([start[0], end[0]], [start[1], end[1]], color=general_color, linewidth=scale)
+                if row['id'] == counterattack_pass_id:
+                    plt.plot([start[0], end[0]], [start[1], end[1]], color='orange', linewidth=scale)
+                else:
+                    plt.plot([start[0], end[0]], [start[1], end[1]], color=general_color, linewidth=scale)
                 plt.plot(start[0], start[1], marker='o', markersize=8*scale, markeredgecolor=general_color, markerfacecolor="black")
             case 'Carry':
                 plt.plot([start[0], end[0]], [start[1], end[1]], color='green', linewidth=scale)
@@ -142,28 +154,6 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
                     team_color = 'red'
                 else:
                     team_color = 'blue'
-                # if team != start_team:
-                #     if teammate:        
-                #         if event_type in ['Duel', 'Ball Receipt*']:
-                #             team_color = 'blue'
-                #         else:
-                #             team_color = 'red'
-                #     else:
-                #         if event_type in ['Duel', 'Ball Receipt*']:
-                #             team_color = 'red'
-                #         else:
-                #             team_color = 'blue'
-                # else:
-                #     if teammate:
-                #         if event_type in ['Duel', 'Ball Receipt*']:
-                #             team_color = 'red'
-                #         else:
-                #             team_color = 'blue'
-                #     else:
-                #         if event_type in ['Duel', 'Ball Receipt*']:
-                #             team_color = 'blue'
-                #         else:
-                #             team_color = 'red'
                 if actor:
                     plt.plot(location[0]*scale, location[1]*scale, 
                     marker='o', markersize=7*scale, markeredgecolor="yellow", markerfacecolor=team_color)
@@ -172,15 +162,23 @@ def draw_events_sequence(sequence, start_team, x_areas=12, y_areas=8, scale=1, f
                     marker='o', markersize=6*scale, markeredgecolor="pink", markerfacecolor=team_color)
                 context_drown = True
         if context_drown:
+            ctx_locations_drown = row['context_locations']
             break
 
+    if scores is None:
+        scores = []
+    if scores_locations is None:
+        scores_locations = []
+
+    if len(scores) > 0 and len(scores_locations) > 0:
+        for score, loc in zip(scores, scores_locations):
+            if scores_locations not in ctx_locations_drown:
+                plt.plot(loc[0]*scale, loc[1]*scale, 
+                marker='o', markersize=4*scale, markeredgecolor='red', markerfacecolor='orange')
+            plt.text(loc[0]*scale-(4*scale), loc[1]*scale-(2.5*scale), score, color='black', fontsize=5*scale)
+
     draw_pitch(ax, x_areas, y_areas, scale)
-    plt.show()
-
-
-# def swap_ctx_loc_condition(team, start_team, event_type):
-#     if team != start_team:
-#         return not event_type in ['Duel', 'Ball Receipt*']
-#     return event_type in ['Duel', 'Ball Receipt*']
-
+    plt.savefig(image_name)
+    if not pdf:
+        plt.show()
 
