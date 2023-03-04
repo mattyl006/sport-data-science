@@ -4,7 +4,9 @@ def evaluate_corner(corner):
     """Evaluate the corner and return a score."""
     corner = corner.apply(evaluate_event, axis=1)
     # TODO: consider corner length
-    # TODO: iterate over events and evaluate each one
+    
+    # Divide the sum of the scores by the number of rated events in corner
+    #corner_score = corner['corner_score'].sum() / len(corner[corner['corner_score'] != 0])
 
     return corner
 
@@ -14,8 +16,8 @@ def evaluate_event(event):
     if event['type'] == 'Pass':
         event['corner_score'] = evaluate_pass(event)
 
-    # elif event['Type'] == 'shot':
-    #     return evaluate_shot(event)
+    elif event['type'] == 'Shot':
+        event['corner_score'] = evaluate_shot(event)
 
     else:
         event['corner_score'] = 0
@@ -43,7 +45,7 @@ def evaluate_pass(pass_):
         
     """Consider the outcome of the pass."""
     if pass_['event'].get('outcome') != None:
-        if pass_['event'].get('outcome', {}).get('Name') == 'Incomplete' or pass_['event'].get('outcome', {}).get('Name') == 'Pass Offside':
+        if pass_['event'].get('outcome', {}).get('name') == 'Incomplete' or pass_['event'].get('outcome', {}).get('name') == 'Pass Offside':
             score -= 0.5
     
     """Consider whether the pass is a shot assist."""
@@ -81,6 +83,23 @@ def get_end_zone(x, y):
 
 def evaluate_shot(shot):
     """Evaluate the shot and return a score."""
-    pass
+    score = 0
+    """Consider the outcome of the shot."""
+    if shot['event'].get('outcome') != None:
+        if shot['event'].get('outcome', {}).get('name') == 'Goal':
+            score += 1
+        elif shot['event'].get('outcome', {}).get('name') == 'Saved':
+            score += 0.5
+        elif shot['event'].get('outcome', {}).get('name') == 'Blocked':
+            score -= 0.2
+        elif shot['event'].get('outcome', {}).get('name') == 'Off T':
+            score -= 0.5
+        elif shot['event'].get('outcome', {}).get('name') == 'Post':
+            score += 0.5
+        elif shot['event'].get('outcome', {}).get('name') == 'Saved To Post':
+            score += 0.5
+        elif shot['event'].get('outcome', {}).get('name') == 'Saved Off T':
+            score += 0.3
+    return score
 
 
