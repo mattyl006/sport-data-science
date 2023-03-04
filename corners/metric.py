@@ -2,23 +2,30 @@ import pandas as pd
 
 def evaluate_corner(corner):
     """Evaluate the corner and return a score."""
+    corner = corner.apply(evaluate_event, axis=1)
     # TODO: consider corner length
     # TODO: iterate over events and evaluate each one
-    pass
+
+    return corner
 
 
 def evaluate_event(event):
     """Evaluate the event and return a score."""
-    if event['Type'] == 'pass':
-        return evaluate_pass(event)
+    if event['type'] == 'Pass':
+        event['corner_score'] = evaluate_pass(event)
+
     # elif event['Type'] == 'shot':
     #     return evaluate_shot(event)
 
+    else:
+        event['corner_score'] = 0
+    return event
 
 def evaluate_pass(pass_):
     """Evaluate the pass and return a score."""
-    value = 0
+    score = 0
 
+    """Consider the number of teammates and opponents in the end zone of the pass."""
     num_of_teammates_in_zone = 0
     num_of_opponents_in_zone = 0
     zone = get_end_zone(pass_['end_x'], pass_['end_y'])
@@ -29,15 +36,23 @@ def evaluate_pass(pass_):
             num_of_opponents_in_zone += 1
     
     diff = num_of_teammates_in_zone - num_of_opponents_in_zone
-    value += diff * 0.5
-
-    # TODO: consider the outcome of the pass (ball receipt, shot, etc.)
+    if zone == "II":
+        score += diff * 0.1
+    else:
+        score += diff * 0.2
+        
+    """Consider the outcome of the pass."""
+    if pass_['event'].get('outcome') != None:
+        if pass_['event'].get('outcome', {}).get('Name') == 'Incomplete' or pass_['event'].get('outcome', {}).get('Name') == 'Pass Offside':
+            score -= 0.5
+    
+    """Consider whether the pass is a shot assist."""
+    if pass_['event'].get('shot_assist') != None:
+        score += 0.5
+    
     # TODO: consider other factors of the pass
 
-            
-    print(f"num_of_teammates_in_zone: {num_of_teammates_in_zone}")
-    print(f"num_of_opponents_in_zone: {num_of_opponents_in_zone}")
-    return value
+    return score
 
 def get_end_zone(x, y):
     """Return the end zone of the pass."""
