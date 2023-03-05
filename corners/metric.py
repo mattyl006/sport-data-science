@@ -2,12 +2,16 @@ import pandas as pd
 
 def evaluate_corner(corner):
     """Evaluate the corner and return a score."""
+    score = 0
+
     corner = corner.apply(evaluate_event, axis=1)
     # TODO: consider corner length
     
-    # Divide the sum of the scores by the number of rated events in corner
-    #corner_score = corner['corner_score'].sum() / len(corner[corner['corner_score'] != 0])
-
+    # Divide the sum of the scores by the number of passes
+    score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
+    
+    #Print the score
+    print(f'Corner score: {score:.2f}')
     return corner
 
 
@@ -38,28 +42,44 @@ def evaluate_pass(pass_):
             num_of_opponents_in_zone += 1
     
     diff = num_of_teammates_in_zone - num_of_opponents_in_zone
-    if zone == "II":
-        score += diff * 0.1
-    else:
-        score += diff * 0.2
-        
-    """Consider the outcome of the pass."""
-    if pass_['event'].get('outcome') != None:
-        if pass_['event'].get('outcome', {}).get('name') == 'Incomplete' or pass_['event'].get('outcome', {}).get('name') == 'Pass Offside':
-            score -= 0.5
-    
-    """Consider whether the pass is a shot assist."""
-    if pass_['event'].get('shot_assist') != None:
-        score += 0.5
-    
-    # TODO: consider other factors of the pass
 
+    """Check if the pass is from the attacking team or the defending team."""
+    if pass_['team'] == pass_['possession_team']:   
+        if zone == "I":
+            score -= 0.8
+        elif zone == "II":
+            score += diff * 0.1
+        else:
+            score += diff * 0.2
+    
+        """Consider the outcome of the pass."""
+        if pass_['event'].get('outcome') != None:
+            if pass_['event'].get('outcome', {}).get('name') == 'Incomplete' or pass_['event'].get('outcome', {}).get('name') == 'Pass Offside':
+                score -= 0.5
+    
+        """Consider whether the pass is a shot assist."""
+        if pass_['event'].get('shot_assist') != None:
+            score += 0.4
+        elif pass_['event'].get('goal_assist') != None:
+            score += 0.6
+
+        """Consider whether the pass is a cross."""
+        if pass_['event'].get('cross') != None:
+            score += 0.2
+    
+    
+    elif pass_['team'] != pass_['possession_team']:
+        score -= 0.5
+        
+    
     return score
 
 def get_end_zone(x, y):
     """Return the end zone of the pass."""
     zone = ""
     match x, y:
+        case _ if x < 48:
+            zone = "I"
         case _ if 48 <= x < 84:
             zone = "II"
         case _ if y <= 16 and 84 <= x:
@@ -87,19 +107,22 @@ def evaluate_shot(shot):
     """Consider the outcome of the shot."""
     if shot['event'].get('outcome') != None:
         if shot['event'].get('outcome', {}).get('name') == 'Goal':
-            score += 1
+            score += 2
         elif shot['event'].get('outcome', {}).get('name') == 'Saved':
-            score += 0.5
+            score += 1
         elif shot['event'].get('outcome', {}).get('name') == 'Blocked':
-            score -= 0.2
+            score += 0.5
         elif shot['event'].get('outcome', {}).get('name') == 'Off T':
-            score -= 0.5
+            score += 0.5
         elif shot['event'].get('outcome', {}).get('name') == 'Post':
-            score += 0.5
+            score += 1
         elif shot['event'].get('outcome', {}).get('name') == 'Saved To Post':
-            score += 0.5
+            score += 1
         elif shot['event'].get('outcome', {}).get('name') == 'Saved Off T':
-            score += 0.3
+            score += 0.5
     return score
 
+# TODO: consider faul commited (with penalty), clearance, ball recovery, duel, dribbles
+
+# TODO: consider carry?
 
