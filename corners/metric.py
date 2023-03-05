@@ -5,8 +5,7 @@ def evaluate_corner(corner):
     score = 0
 
     corner = corner.apply(evaluate_event, axis=1)
-    
-    # TODO: consider corner length    
+      
     # Divide the sum of the scores by the number of passes
     score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
     
@@ -19,18 +18,16 @@ def evaluate_event(event):
     """Evaluate the event and return a score."""
     if event['type'] == 'Pass':
         event['corner_score'] = evaluate_pass(event)
-
     elif event['type'] == 'Shot':
         event['corner_score'] = evaluate_shot(event)
-
     else:
         event['corner_score'] = 0
     return event
 
+
 def evaluate_pass(pass_):
     """Evaluate the pass and return a score."""
     score = 0
-
     """Consider the number of teammates and opponents in the end zone of the pass."""
     num_of_teammates_in_zone = 0
     num_of_opponents_in_zone = 0
@@ -70,9 +67,9 @@ def evaluate_pass(pass_):
     
     elif pass_['team'] != pass_['possession_team']:
         score -= 0.5
-        
-    
+            
     return score
+
 
 def get_end_zone(x, y):
     """Return the end zone of the pass."""
