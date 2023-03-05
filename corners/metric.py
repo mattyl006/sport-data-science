@@ -5,8 +5,8 @@ def evaluate_corner(corner):
     score = 0
 
     corner = corner.apply(evaluate_event, axis=1)
-    # TODO: consider corner length
     
+    # TODO: consider corner length    
     # Divide the sum of the scores by the number of passes
     score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
     
@@ -105,20 +105,22 @@ def evaluate_shot(shot):
     """Evaluate the shot and return a score."""
     score = 0
     """Consider the outcome of the shot."""
+   
     if shot['event'].get('outcome') != None:
-        if shot['event'].get('outcome', {}).get('name') == 'Goal':
+        outcome = shot['event'].get('outcome', {}).get('name') 
+        if outcome == 'Goal':
             score += 2
-        elif shot['event'].get('outcome', {}).get('name') == 'Saved':
+        elif outcome == 'Saved':
             score += 1
-        elif shot['event'].get('outcome', {}).get('name') == 'Blocked':
+        elif outcome == 'Blocked':
             score += 0.5
-        elif shot['event'].get('outcome', {}).get('name') == 'Off T':
+        elif outcome == 'Off T':
             score += 0.5
-        elif shot['event'].get('outcome', {}).get('name') == 'Post':
+        elif outcome == 'Post':
             score += 1
-        elif shot['event'].get('outcome', {}).get('name') == 'Saved To Post':
+        elif outcome == 'Saved To Post':
             score += 1
-        elif shot['event'].get('outcome', {}).get('name') == 'Saved Off T':
+        elif outcome == 'Saved Off T':
             score += 0.5
     return score
 
