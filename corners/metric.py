@@ -3,15 +3,15 @@ import pandas as pd
 def evaluate_corner(corner, params):
     """Evaluate the corner and return a score."""
     score = 0
-
-    # Evaluate each event in the corner using params
     corner = corner.apply(evaluate_event, axis=1, args=(params,))
       
     # Divide the sum of the scores by the number of passes
-    score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
+    if len(corner[corner['type'] == 'Pass']) == 0:
+        score = corner['corner_score'].sum() * 2
+    else:
+        score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
     
-    #Print the score
-    print(f'Corner score: {score:.2f}')
+    print(f'Corner score: {score:.2f} Period: {corner["period"].iloc[0]}, Time: {corner["minute"].iloc[0]}:{corner["second"].iloc[0]}, Team: {corner["team"].iloc[0]}')
     return corner
 
 
@@ -21,6 +21,12 @@ def evaluate_event(event, params):
         event['corner_score'] = evaluate_pass(event, params)
     elif event['type'] == 'Shot':
         event['corner_score'] = evaluate_shot(event, params)
+    elif event['type'] == 'Clearance':
+        event['corner_score'] = evaluate_clearance(event, params)
+    elif event['type'] == 'Ball Recovery':
+        event['corner_score'] = evaluate_ball_recovery(event, params)
+    elif event['type'] == 'Foul Committed':
+        event['corner_score'] = evaluate_foul_committed(event, params)
     else:
         event['corner_score'] = 0
     return event
@@ -102,8 +108,7 @@ def get_end_zone(x, y):
 def evaluate_shot(shot, params):
     """Evaluate the shot and return a score."""
     score = 0
-    """Consider the outcome of the shot."""
-   
+    """Consider the outcome of the shot."""   
     if shot['event'].get('outcome') != None:
         outcome = shot['event'].get('outcome', {}).get('name') 
         if outcome == 'Goal':
@@ -122,7 +127,35 @@ def evaluate_shot(shot, params):
             score += params['shot_saved_off_target']
     return score
 
-# TODO: consider faul commited (with penalty), clearance, ball recovery, duel, dribbles
+def evaluate_clearance(clearance, params):
+    """Evaluate the clearance and return a score."""
+    score = 0
+    if clearance['team'] != clearance['possession_team']:
+        score += params['clearance_by_opponent']
+    return score
 
-# TODO: consider carry?
+
+def evaluate_ball_recovery(ball_recovery, params):
+    """Evaluate the ball recovery and return a score."""
+    score = 0
+    if ball_recovery['team'] == ball_recovery['possession_team']:
+        score += params['ball_recovery_by_own_team']
+    elif ball_recovery['team'] != ball_recovery['possession_team']:
+        score += params['ball_recovery_by_opponent']
+    return score
+
+def evaluate_foul_committed(foul, params):
+    """Evaluate the foul committed and return a score."""
+    score = 0
+    if foul['team'] == foul['possession_team']:
+        score += params['foul_committed_by_own_team']
+
+    elif foul['team'] != foul['possession_team']:
+        score += params['foul_committed_by_opponent']
+    return score
+
+
+# TODO: dribbles, outcome of foul_committed (penalty, cards)
+
+# TODO: consider carry, duel?
 
