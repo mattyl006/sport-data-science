@@ -1,9 +1,9 @@
-from dataframe_modify.grid_areas import add_areas_and_pos
+from dataframe_modify.grid_areas import add_grid_areas
 
 def events_in_area(events_df, team, event, areas_x=12, areas_y=8):
     df = events_df[events_df['possession_team'] == team]
     df = df[events_df['type'] == event]
-    df = add_areas_and_pos(df)
+    df = add_grid_areas(df)
 
     start_areas = [area for area in df['start_area'].values]
     start_areas_count = [(area, str(round((start_areas.count(area) / len(start_areas)) * 100, 2)) + '%') for area in start_areas]
