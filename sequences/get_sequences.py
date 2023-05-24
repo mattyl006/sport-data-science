@@ -6,7 +6,7 @@ def get_sequences_by_possession(df):
     split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
     prev_team = df['team'][0]
     prev_possession_team = df['possession_team'][0]
-    prev_possesion = df['possession'][0]
+    # prev_possesion = df['possession'][0]
 
     for _, row in df.iterrows():
         if row['type'] in split_events:
@@ -15,13 +15,14 @@ def get_sequences_by_possession(df):
                 sequences.append(pd.DataFrame(sequence))
                 sequence = []
             continue
-        elif (row['possession_team'] != prev_possession_team or row['team'] != prev_team) and row['possession'] != prev_possesion:
+        #  and row['possession'] != prev_possesion
+        elif (row['possession_team'] != prev_possession_team or row['team'] != prev_team):
             if len(sequence) != 0:
                 sequences.append(pd.DataFrame(sequence))
                 sequence = []
         sequence.append(row)
         prev_team = row['team']
-        prev_possesion = row['possession']
+        # prev_possesion = row['possession']
         prev_possession_team = row['possession_team']
 
     return sequences
