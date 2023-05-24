@@ -98,7 +98,7 @@ class Draw:
         self.draw_sectors()
         self.draw_circles()
 
-    def draw_sequence(self, sequence, start_team, first_event_360=False, scores=[], scores_locations=[], counterattack_pass_id=None, pdf=False, image_name=None):
+    def draw_sequence(self, sequence, start_team, first_event_360=False, scores=[], scores_locations=[], counterattack_pass_id=None, pdf=False, image_name=None, sb360=True):
         self.fig, self.ax = plt.subplots()
         self.fig.set_size_inches(7*self.scale, 5*self.scale)
         i = 0
@@ -168,38 +168,39 @@ class Draw:
                 case _:
                     plt.plot(start[0], start[1], marker='1', markersize=8*self.scale, markeredgecolor=general_color, markerfacecolor="black")
             plt.text(start[0]-(self.scale/2), start[1]-(self.scale/2), str(i), color='white', fontsize=4*self.scale)
-        if not first_event_360: #reverse sequence
-            sequence = sequence[::-1]
-        context_drown = False
-        for _, row in sequence.iterrows():
-            for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
-                if len(location) > 0 and location != '': #and True in row['actor_locations']
-                    if team != start_team and teammate:
-                        team_color = 'red'
-                    elif team == start_team and not teammate:
-                        team_color = 'red'
-                    else:
-                        team_color = 'blue'
-                    if actor:
-                        plt.plot(location[0]*self.scale, location[1]*self.scale, 
-                        marker='o', markersize=7*self.scale, markeredgecolor="yellow", markerfacecolor=team_color)
-                    else:
-                        plt.plot(location[0]*self.scale, location[1]*self.scale, 
-                        marker='o', markersize=6*self.scale, markeredgecolor="pink", markerfacecolor=team_color)
-                    context_drown = True
-            if context_drown:
-                ctx_locations_drown = row['context_locations']
-                break
-        if scores is None:
-            scores = []
-        if scores_locations is None:
-            scores_locations = []
-        if len(scores) > 0 and len(scores_locations) > 0:
-            for score, loc in zip(scores, scores_locations):
-                if scores_locations not in ctx_locations_drown:
-                    plt.plot(loc[0]*self.scale, loc[1]*self.scale, 
-                    marker='o', markersize=4*self.scale, markeredgecolor='red', markerfacecolor='orange')
-                plt.text(loc[0]*self.scale-(4*self.scale), loc[1]*self.scale-(2.5*self.scale), score, color='black', fontsize=5*self.scale)
+        if sb360:
+            if not first_event_360: #reverse sequence
+                sequence = sequence[::-1]
+            context_drown = False
+            for _, row in sequence.iterrows():
+                for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
+                    if len(location) > 0 and location != '': #and True in row['actor_locations']
+                        if team != start_team and teammate:
+                            team_color = 'red'
+                        elif team == start_team and not teammate:
+                            team_color = 'red'
+                        else:
+                            team_color = 'blue'
+                        if actor:
+                            plt.plot(location[0]*self.scale, location[1]*self.scale, 
+                            marker='o', markersize=7*self.scale, markeredgecolor="yellow", markerfacecolor=team_color)
+                        else:
+                            plt.plot(location[0]*self.scale, location[1]*self.scale, 
+                            marker='o', markersize=6*self.scale, markeredgecolor="pink", markerfacecolor=team_color)
+                        context_drown = True
+                if context_drown:
+                    ctx_locations_drown = row['context_locations']
+                    break
+            if scores is None:
+                scores = []
+            if scores_locations is None:
+                scores_locations = []
+            if len(scores) > 0 and len(scores_locations) > 0:
+                for score, loc in zip(scores, scores_locations):
+                    if scores_locations not in ctx_locations_drown:
+                        plt.plot(loc[0]*self.scale, loc[1]*self.scale, 
+                        marker='o', markersize=4*self.scale, markeredgecolor='red', markerfacecolor='orange')
+                    plt.text(loc[0]*self.scale-(4*self.scale), loc[1]*self.scale-(2.5*self.scale), score, color='black', fontsize=5*self.scale)
         self.draw_pitch()
         if image_name:
             plt.savefig(image_name)

@@ -7,7 +7,6 @@ def get_sequences_by_possession(df):
     prev_team = df['team'][0]
     prev_possession_team = df['possession_team'][0]
     prev_possesion = df['possession'][0]
-
     for _, row in df.iterrows():
         if row['type'] in split_events:
             if len(sequence) != 0:
@@ -23,6 +22,28 @@ def get_sequences_by_possession(df):
         prev_team = row['team']
         prev_possesion = row['possession']
         prev_possession_team = row['possession_team']
+    return sequences
+
+def get_sequences(df):
+    sequences = []
+    sequence = []
+    split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
+    prev_team = df['team'][0]
+    prev_possession_team = df['possession_team'][0]
+    for _, row in df.iterrows():
+        if row['type'] in split_events:
+            if len(sequence) != 0:
+                sequence.append(row)
+                sequences.append(pd.DataFrame(sequence))
+                sequence = []
+            continue
+        elif (row['possession_team'] != prev_possession_team or row['team'] != prev_team):
+            if len(sequence) != 0:
+                sequences.append(pd.DataFrame(sequence))
+                sequence = []
+        sequence.append(row)
+        prev_team = row['team']
+        prev_possession_team = row['possession_team']
 
     return sequences
 
@@ -35,9 +56,7 @@ def get_corners_sequences(sequences):
         except:
             print(sequence)
             print(i)
-        
     return arr
-
 
 def get_sequence_by_time(sequences, period, minute, second):
     for i in range (0,len(sequences)):
@@ -45,8 +64,6 @@ def get_sequence_by_time(sequences, period, minute, second):
             print(f'seq id: {i}')
             return sequences[i]
     print('Exception in get_sequence_by_time! Bad timestamp probably!')
-
-        
 
 def get_first_id(sequence):
     return sequence['index'].iloc[0]
