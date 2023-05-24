@@ -27,9 +27,7 @@ def get_sequences_by_possession(df):
     return sequences
 
 def get_corners_sequences(sequences):
-    # return [sequence for sequence in sequences if (sequence['play_pattern'] == 'From Corner').any()]
     arr = []
-    # print(len(sequences))
     for i, sequence in enumerate(sequences):
         try:
             if (sequence['play_pattern'] == 'From Corner').any():
@@ -41,20 +39,10 @@ def get_corners_sequences(sequences):
     return arr
 
 
-
-# def get_corners_sequences(df):
-#     sequences = []
-#     sequence = []
-#     for i in range(0,len(df)):
-#         if ((df['possession'] == i) & (df['play_pattern'] == 'From Corner')).any():
-#             sequence = df.loc[df['possession'] == i]        
-#             sequences.append(pd.DataFrame(sequence))
-#     return sequences
-
-
 def get_sequence_by_time(sequences, period, minute, second):
     for i in range (0,len(sequences)):
         if ((sequences[i]['period'] == period) & (sequences[i]['minute'] >= minute) & (sequences[i]['second'] >= second)).any():
+            print(f'seq id: {i}')
             return sequences[i]
     print('Exception in get_sequence_by_time! Bad timestamp probably!')
 
