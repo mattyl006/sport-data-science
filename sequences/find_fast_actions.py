@@ -27,6 +27,22 @@ def find_fast_actions(sequences, team, start_team, half, max_timestamp=15000):
                 fast_attact_sequences.append(s)
     return fast_attact_sequences
 
+
+def find_fast_actions_forward_perspective(sequences, team, max_timestamp=15000):
+    fast_attact_sequences = []
+    team_half = {'A', 'B', 'C', 'D', 'E', 'F'}
+    for s in sequences:
+        possesion_team = s['possession_team'].values[0]
+        start_area = s['start_area'].values[0]
+        end_area = s['start_area'].values[-1]
+        start_timestamp = s['timestamp'].values[0]
+        end_timestamp = s['timestamp'].values[-1]
+        timestamp_diff = timestamp_difference(start_timestamp, end_timestamp)
+        if start_area != '' and end_area != '' and possesion_team == team:
+            if start_area[0] in team_half and end_area[0] not in team_half and timestamp_diff < max_timestamp:
+                fast_attact_sequences.append(s)
+    return fast_attact_sequences
+
 # Klasyfikacja szybkich ataków
 # W momencie kluczowego długiego podania brać lokalizacje przeciwników na przecięciu (po drodze) tego podania
 # Badając w ten sposób czy podanie było "trudne" czy "łatwe"

@@ -1,5 +1,6 @@
 from statsbombpy import sb
 import pandas as pd
+from dataframe_modify.add_context import add_context
 
 def get_competitions():
     return sb.competitions()
@@ -35,45 +36,27 @@ def get_types_without_json_column(events_dfs):
 
 def get_merged_events(events_types, match_id):
     events_dfs = get_events(events_types, match_id)
-
     types_without_json_column = get_types_without_json_column(events_dfs)
-    
     events_dfs_renamed = []
-
     for event_df in events_dfs:
         event_type = event_df['type'][0]
         if event_type not in types_without_json_column:
             events_dfs_renamed.append(event_df.rename(columns={get_event_json_col_name(event_type) : 'event'}))
         else:
             events_dfs_renamed.append(event_df)
-
     events = pd.concat(events_dfs_renamed, ignore_index=True)
     events = events.fillna('')
-
     return events.sort_values('index', ignore_index=True)
 
-# def get_merged_events(events_types, match_id):
-#     events_dfs = []
-#     for event_type in events_types:
-#         df = get_events(event_type, match_id)
-#         if len(df) != 0: 
-#             events_dfs.append(get_events(event_type, match_id))
 
-#     types_without_json_column = get_types_without_json_column(events_dfs)
-    
-#     events_dfs_renamed = []
-
-#     for event_df in events_dfs:
-#         event_type = event_df['type'][0]
-#         if event_type not in types_without_json_column:
-#             events_dfs_renamed.append(event_df.rename(columns={get_event_json_col_name(event_type) : 'event'}))
-#         else:
-#             events_dfs_renamed.append(event_df)
-
-#     events = pd.concat(events_dfs_renamed, ignore_index=True)
-#     events = events.fillna('')
-
-#     return events.sort_values('index', ignore_index=True)
+def get_events_from_matches(events_types, match_ids):
+    matches = []
+    for id in match_ids:
+        frames = get_sb360(id)
+        events = get_merged_events(events_types, id)
+        events = add_context(events, frames)
+        matches.append(events)
+    return pd.concat(matches, ignore_index=True)
 
 def get_sb360(match_id):
     return sb.frames(match_id, fmt='dataframe')
