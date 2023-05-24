@@ -61,6 +61,7 @@ def get_corners_sequences(sequences):
 def get_sequence_by_time(sequences, period, minute, second):
     for i in range (0,len(sequences)):
         if ((sequences[i]['period'] == period) & (sequences[i]['minute'] >= minute) & (sequences[i]['second'] >= second)).any():
+            print(f'seq id: {i}')
             return sequences[i]
     print('Exception in get_sequence_by_time! Bad timestamp probably!')
 
