@@ -54,9 +54,7 @@ class Draw:
             generate_corner_text(93, 40, "CO")
             generate_corner_text(111, 23, "RP")
             generate_corner_text(111, 57, "LP")
-            generate_corner_text(111, 40, "CP")
-
-            
+            generate_corner_text(111, 40, "CP")        
 
     def draw_left_penalty_area(self):
         color = "black"
