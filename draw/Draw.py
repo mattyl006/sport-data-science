@@ -29,8 +29,8 @@ class Draw:
         plt.plot([self.pitch_size_x*self.scale, 0],[0, 0], color=color)
         plt.plot([(self.pitch_size_x/2)*self.scale, (self.pitch_size_x/2)*self.scale],[0, self.pitch_size_y*self.scale], color=color)
 
-    def draw_grid_text(self):
-        if not self.corner:
+    def draw_grid_text(self, corner=False):
+        if not corner:
             y = 82*self.scale
             for i in range (0, self.x_areas):
                 x = ((((self.pitch_size_x/2) / self.x_areas) + i * self.pitch_size_x / self.x_areas) -1) * self.scale
@@ -71,9 +71,9 @@ class Draw:
         plt.plot([114*self.scale,114*self.scale],[48*self.scale,32*self.scale],color=color)
         plt.plot([self.pitch_size_x*self.scale,114*self.scale],[32*self.scale,32*self.scale],color=color)
 
-    def draw_sectors(self):
+    def draw_sectors(self, corner=False):
         color = "gray"
-        if not self.corner:
+        if not corner:
             x = [self.pitch_size_x*self.scale,0]
             for i in range(1, self.y_areas):
                 y = [(self.pitch_size_y/self.y_areas)*i*self.scale,(self.pitch_size_y/self.y_areas)*i*self.scale]
@@ -99,8 +99,7 @@ class Draw:
             plt.plot([120*self.scale,84*self.scale],[16*self.scale,16*self.scale], color="gray")
             plt.plot([120*self.scale,120*self.scale],[16*self.scale,0], color="gray")
             plt.plot([84*self.scale,84*self.scale],[16*self.scale,0], color="gray")
-            plt.plot([84*self.scale,120*self.scale],[0,0], color="gray")
-            #TODO: fix LZ
+            plt.plot([84*self.scale,120*self.scale],[16*self.scale,16*self.scale], color="gray")
 
             # RZ
             plt.plot([120*self.scale,84*self.scale],[64*self.scale,64*self.scale], color="gray")
@@ -121,10 +120,10 @@ class Draw:
             plt.plot([84*self.scale,102*self.scale],[30*self.scale,30*self.scale], color="gray")
 
             # RO
-            plt.plot([102*self.scale,84*self.scale],[64*self.scale,64*self.scale], color="gray")
-            plt.plot([102*self.scale,102*self.scale],[80*self.scale,64*self.scale], color="gray")
-            plt.plot([84*self.scale,84*self.scale],[80*self.scale,64*self.scale], color="gray")
-            plt.plot([84*self.scale,102*self.scale],[80*self.scale,80*self.scale], color="gray")
+            # plt.plot([102*self.scale,84*self.scale],[64*self.scale,64*self.scale], color="gray")
+            # plt.plot([102*self.scale,102*self.scale],[80*self.scale,64*self.scale], color="gray")
+            # plt.plot([84*self.scale,84*self.scale],[80*self.scale,64*self.scale], color="gray")
+            # plt.plot([84*self.scale,102*self.scale],[80*self.scale,80*self.scale], color="gray")
 
             # LP
             plt.plot([120*self.scale,102*self.scale],[30*self.scale,30*self.scale], color="gray")
@@ -155,17 +154,17 @@ class Draw:
         self.ax.add_patch(leftPenSpot)
         self.ax.add_patch(rightPenSpot)
 
-    def draw_pitch(self):
+    def draw_pitch(self, corner=False):
+        self.draw_sectors(corner)
         self.draw_pitch_outline_centreline()
-        self.draw_grid_text()
+        self.draw_grid_text(corner)
         self.draw_left_penalty_area()
         self.draw_right_penalty_area()
         self.draw_left_six_yard_box()
         self.draw_right_six_yard_box()
-        self.draw_sectors()
         self.draw_circles()
 
-    def draw_sequence(self, sequence, start_team, first_event_360=False, scores=[], scores_locations=[], counterattack_pass_id=None, pdf=False, image_name=None, sb360=True):
+    def draw_sequence(self, sequence, start_team, first_event_360=False, scores=[], scores_locations=[], counterattack_pass_id=None, pdf=False, image_name=None, sb360=True, corner=False):
         self.fig, self.ax = plt.subplots()
         self.fig.set_size_inches(7*self.scale, 5*self.scale)
         i = 0
@@ -268,7 +267,7 @@ class Draw:
                         plt.plot(loc[0]*self.scale, loc[1]*self.scale, 
                         marker='o', markersize=4*self.scale, markeredgecolor='red', markerfacecolor='orange')
                     plt.text(loc[0]*self.scale-(4*self.scale), loc[1]*self.scale-(2.5*self.scale), score, color='black', fontsize=5*self.scale)
-        self.draw_pitch()
+        self.draw_pitch(corner)
         if image_name:
             plt.savefig(image_name)
         if not pdf:
