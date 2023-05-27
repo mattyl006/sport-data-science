@@ -44,8 +44,19 @@ class Draw:
                 size = 8*self.scale
                 plt.text(x, y, text, fontsize=size)
         else:
-            #TODO: Add corner grid text
-            pass
+            def generate_corner_text(x, y, text):
+                size = 8*self.scale
+                plt.text(x-1*self.scale, y-1*self.scale, text, fontsize=size)
+            generate_corner_text(102, 8, "RZ")
+            generate_corner_text(102, 72, "LZ")
+            generate_corner_text(93, 23, "RO")
+            generate_corner_text(93, 57, "LO")
+            generate_corner_text(93, 40, "CO")
+            generate_corner_text(111, 23, "RP")
+            generate_corner_text(111, 57, "LP")
+            generate_corner_text(111, 40, "CP")
+
+            
 
     def draw_left_penalty_area(self):
         color = "black"
