@@ -28,7 +28,7 @@ def find_fast_actions(sequences, team, start_team, half, max_timestamp=15000):
     return fast_attact_sequences
 
 
-def find_fast_actions_forward_perspective(sequences, team, max_timestamp=15000):
+def find_fast_actions_forward_perspective(sequences, team=None, max_timestamp=15000):
     fast_attact_sequences = []
     team_half = {'A', 'B', 'C', 'D', 'E', 'F'}
     for s in sequences:
@@ -38,7 +38,10 @@ def find_fast_actions_forward_perspective(sequences, team, max_timestamp=15000):
         start_timestamp = s['timestamp'].values[0]
         end_timestamp = s['timestamp'].values[-1]
         timestamp_diff = timestamp_difference(start_timestamp, end_timestamp)
-        if start_area != '' and end_area != '' and possesion_team == team:
+        particular_team = True
+        if team is not None:
+            particular_team = (possesion_team == team)
+        if start_area != '' and end_area != '' and particular_team:
             if start_area[0] in team_half and end_area[0] not in team_half and timestamp_diff < max_timestamp:
                 fast_attact_sequences.append(s)
     return fast_attact_sequences
