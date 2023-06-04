@@ -11,7 +11,7 @@ def get_df_row(corner):
     corner_df['num_of_passes'] = [get_corner_num_of_passes(corner)]
     corner_df['num_of_shots'] = [get_corner_num_of_shots(corner)]
     # corner_df['score'] = [evaluate_corner(corner, params)]
-    corner_df['obv'] = [get_corner_obv(corner)]
+    # corner_df['obv'] = [get_corner_obv(corner)]
     corner_df['xg'] = [get_corner_xg(corner)]
     return corner_df
 
