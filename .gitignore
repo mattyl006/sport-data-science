@@ -6,3 +6,4 @@ __pycache__
 *.jpg
 .ipynb_checkpoints
 *.pdf
+*.pkl
