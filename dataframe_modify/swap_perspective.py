@@ -6,14 +6,20 @@ def swap_y(df, sb360=True):
                     for start_y in df['start_y'].values]
     new_end_ys = [(80.0 - float(start_y)) if start_y != '' else start_y 
                     for start_y in df['end_y'].values]
+    matches_without_sb360 = []
     if sb360:
-        new_context_locations = [[[location[0], (80.0 - location[1])] 
-            if location != '' else location for location in context_locations] 
-            for context_locations in df['context_locations'].values]
+        new_context_locations = []
+        for context_locations, match_id in zip(df['context_locations'].values, df['match_id'].values):
+            if context_locations is not None:
+                new_context_locations.append([[location[0], (80.0 - location[1])] if location != '' else location for location in context_locations])
+            else:
+                new_context_locations.append([])
+                matches_without_sb360.append(match_id)
         new_df['context_locations'] = new_context_locations
     new_df['start_y'] = new_start_ys
     new_df['end_y'] = new_end_ys
-    return new_df
+    
+    return new_df, list(set(matches_without_sb360))
 
 def swap_x(df, sb360=True):
     new_df = df

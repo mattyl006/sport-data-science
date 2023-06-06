@@ -13,14 +13,9 @@ def evaluate_corner(corner, params):
     
     corner['score'] = score
 
-    print(f'Corner score: {score:.2f} Period: {corner["period"].iloc[0]}, Time: {corner["minute"].iloc[0]}:{corner["second"].iloc[0]}, Team: {corner["team"].iloc[0]}')
-    # TODO: consider corner length
-    
-    # Divide the sum of the scores by the number of passes
-    score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
-    
+    # print(f'Corner score: {score:.2f} Period: {corner["period"].iloc[0]}, Time: {corner["minute"].iloc[0]}:{corner["second"].iloc[0]}, Team: {corner["team"].iloc[0]}')
     #Print the score
-    print(f'Corner score: {score:.2f}')
+    # print(f'Corner score: {score:.2f}')
     return corner
 
 
