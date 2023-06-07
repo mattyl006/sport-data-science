@@ -1,30 +1,32 @@
 import pandas as pd
-from corners.metric import *
+import math
 
 events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
 'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
 
-def get_fast_action_row(df):
+def get_fast_action_row(seq):
     new_df = pd.DataFrame()
-    new_df['id'] = [get_sequence_id(df)]
-    new_df['team'] = [get_fast_action_team(df)]
-    new_df['duration'] = [get_fast_action_duration(df)]
+    new_df['id'] = [get_sequence_id(seq)]
+    new_df['team'] = [get_fast_action_team(seq)]
+    new_df['duration'] = [get_fast_action_duration(seq)]
     for event_type in events_to_analize:
         event_type_str = event_type.replace(' ', '_').lower()
-        new_df[f'num_of_{event_type_str}'] = [get_df_num_of_event_type(df, event_type)]
-    new_df['num_of_events'] = [get_df_num_of_events(df)]
-    new_df['path'] = [get_df_path(df)]
-    new_df['start_area'] = [get_df_start(df)]
-    new_df['end_area'] = [get_df_end(df)]
+        new_df[f'num_of_{event_type_str}'] = [get_seq_num_of_event_type(seq, event_type)]
+    new_df['num_of_events'] = [get_seq_num_of_events(seq)]
+    new_df['path'] = [get_seq_path(seq)]
+    new_df['start_area'] = [get_seq_start(seq)]
+    new_df['end_area'] = [get_seq_end(seq)]
+    new_df['key_pass_len'] = [get_key_pass_len(seq)]
+    new_df['opponent_distances'] = [get_opponent_distances(seq)]
     return new_df
 
-def get_sequence_id(df):
-    start_id = df.iloc[0]['id']
-    end_id = df.iloc[-1]['id']
+def get_sequence_id(seq):
+    start_id = seq.iloc[0]['id']
+    end_id = seq.iloc[-1]['id']
     return f'{start_id}-{end_id}'
 
-def get_df_num_of_event_type(df, event_type):
-    return len(df[df['type'] == event_type])
+def get_seq_num_of_event_type(seq, event_type):
+    return len(seq[seq['type'] == event_type])
 
 def get_fast_action_obv(corner):
     obv = 0
@@ -42,21 +44,21 @@ def get_fast_action__xg(corner):
                 xg += float(corner.iloc[i]['event'].get('statsbomb_xg'))
     return xg
 
-def get_df_num_of_events(df):
+def get_seq_num_of_events(seq):
     n = 0
     for event_type in events_to_analize:
-        n += get_df_num_of_event_type(df, event_type)
+        n += get_seq_num_of_event_type(seq, event_type)
     return n
 
-def get_fast_action_team(df):
-    return df.iloc[0]['team']
+def get_fast_action_team(seq):
+    return seq.iloc[0]['team']
 
-def get_fast_action_duration(df):
-    return (df.iloc[-1]['minute'] * 60 + df.iloc[-1]['second']) - (df.iloc[0]['minute'] * 60 - df.iloc[0]['second'])
+def get_fast_action_duration(seq):
+    return (seq.iloc[-1]['minute'] * 60 + seq.iloc[-1]['second']) - (seq.iloc[0]['minute'] * 60 - seq.iloc[0]['second'])
 
-def get_df_path(df):
+def get_seq_path(seq):
     path = []
-    for start_area, end_area in zip(df['start_area'].values, df['end_area'].values):
+    for start_area, end_area in zip(seq['start_area'].values, seq['end_area'].values):
         if len(path) == 0:
             if start_area != '':
                 path.append(start_area)
@@ -69,22 +71,45 @@ def get_df_path(df):
                 path.append(end_area)
     return path
 
-def get_df_start(df):
-    for start_area in df['start_area'].values:
+def get_seq_start(seq):
+    for start_area in seq['start_area'].values:
         if start_area != '':
             return start_area
 
-def get_df_end(df):
-    start_areas = df['start_area'].values[::-1]
-    end_areas = df['end_area'].values[::-1]
+def get_seq_end(seq):
+    start_areas = seq['start_area'].values[::-1]
+    end_areas = seq['end_area'].values[::-1]
     for start_area, end_area in zip(start_areas, end_areas):
         if end_area != '':
             return end_area
         if start_area != '':
             return start_area
 
-def get_opponent_distances(df):
-    pass
+def get_opponent_distances(seq):
+    start_locations = [[start_x, start_y] for start_x, start_y in zip(seq['start_x'].values, seq['start_y'].values)]
+    enemies_locations = []
+    for context_locations, teammate_locations in zip(seq['context_locations'].values, seq['teammate_locations'].values):
+        enemy_locations = [location if not teammate else '' for location, teammate in zip(context_locations, teammate_locations)]
+        enemy_locations = list(filter(lambda a: a != '', enemy_locations))
+        enemies_locations.append(enemy_locations)
+    enemy_distances = 0
+    n = 0
+    for start_location, enemy_locations in zip(start_locations, enemies_locations):
+        for enemy_location in enemy_locations:
+            enemy_distances += math.dist(start_location, [enemy_location[0], enemy_location[1]])
+            n += 1
+    if n != 0:
+        return enemy_distances / n
+    return 0
 
-def get_key_pass_len(df):
-    pass
+def get_key_pass_len(seq):
+    team_half = {'A', 'B', 'C', 'D', 'E', 'F'}
+    for event_id, event_type, end_area in zip(seq['id'].values, seq['type'].values, seq['end_area'].values):
+        if event_type == 'Pass' and end_area[0] not in team_half:
+            key_pass = seq.loc[seq['id'] == event_id]
+            start_x = key_pass['start_x'].values[0]
+            start_y = key_pass['start_y'].values[0]
+            end_x = key_pass['end_x'].values[0]
+            end_y = key_pass['end_y'].values[0]
+            return math.dist([start_x, start_y], [end_x, end_y])
+    return 0
