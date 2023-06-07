@@ -23,7 +23,7 @@ def get_fast_action_row(seq):
 def get_sequence_id(seq):
     start_id = seq.iloc[0]['id']
     end_id = seq.iloc[-1]['id']
-    return f'{start_id}-{end_id}'
+    return f'{start_id}#{end_id}'
 
 def get_seq_num_of_event_type(seq, event_type):
     return len(seq[seq['type'] == event_type])
