@@ -46,7 +46,7 @@ class Draw:
         else:
             def generate_corner_text(x, y, text):
                 size = 8*self.scale
-                plt.text(x-1*self.scale, y-1*self.scale, text, fontsize=size)
+                plt.text((x-1)*self.scale, (y-1)*self.scale, text, fontsize=size)
             generate_corner_text(102, 8, "RZ")
             generate_corner_text(102, 72, "LZ")
             generate_corner_text(93, 23, "RO")
