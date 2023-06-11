@@ -19,7 +19,7 @@ def prepare_matches_from_pkl(pkl_path):
 default_events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
 'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
 
-def get_df_row(corner, events_to_analize=default_events_to_analize):
+def get_df_row(corner, events_to_analize=default_events_to_analize, end_pass_zones = False, shot_on_goal = False):
     """Get the row to dataframe of the corner."""
     corner_df = pd.DataFrame()
     corner_df['id'] = [get_sequence_id(corner)]
@@ -37,6 +37,18 @@ def get_df_row(corner, events_to_analize=default_events_to_analize):
     corner_df['corner_score'] = [get_conrner_score(corner)]
     corner_df['obv'] = [get_corner_obv(corner)]
     corner_df['xg'] = [get_corner_xg(corner)]
+
+    if end_pass_zones:
+        for zone in ['I', 'II', 'LZ', 'RZ', 'LO', 'CO', 'RO', 'LP', 'RP', 'CP']:
+            corner_df[f'num_of_passes_to_{zone}'] = 0
+        for i in range(len(corner)):
+            if corner.iloc[i]['type'] == 'Pass':
+                zone = get_end_zone(corner.iloc[i]['end_x'], corner.iloc[i]['end_y'])
+                corner_df[f'num_of_passes_to_{zone}'] += 1
+    
+    if shot_on_goal:
+        corner_df['shot_on_goal'] = [get_shot_on_goal(corner)]
+
     return corner_df
 
 def get_sequence_id(df):
@@ -88,3 +100,12 @@ def get_df_num_of_events(df):
 
 def get_df_num_of_event_type(df, event_type):
     return len(df[df['type'] == event_type])
+
+def get_shot_on_goal(corner):
+    for i in range(len(corner)):
+        if corner.iloc[i]['type'] == 'Shot':
+            if corner.iloc[i]['event'].get('outcome') != None:
+                outcome = corner.iloc[i]['event'].get('outcome', {}).get('name')
+                if outcome not in ['Blocked', 'Off T']:
+                    return 1
+    return 0
