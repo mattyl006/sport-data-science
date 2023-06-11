@@ -14,10 +14,17 @@ def get_fast_action_row(seq):
         new_df[f'num_of_{event_type_str}'] = [get_seq_num_of_event_type(seq, event_type)]
     new_df['num_of_events'] = [get_seq_num_of_events(seq)]
     new_df['path'] = [get_seq_path(seq)]
-    new_df['start_area'] = [get_seq_start(seq)]
-    new_df['end_area'] = [get_seq_end(seq)]
+    new_df['start_area'] = [get_seq_start_area(seq)]
+    new_df['end_area'] = [get_seq_end_area(seq)]
+    new_df['start_x'] = [get_seq_start_loc(seq, 'start_x')]
+    new_df['start_y'] = [get_seq_start_loc(seq, 'start_y')]
+    new_df['end_x'] = [get_seq_end_loc(seq, 'x')]
+    new_df['end_y'] = [get_seq_end_loc(seq, 'y')]
     new_df['key_pass_len'] = [get_key_pass_len(seq)]
     new_df['opponent_distances'] = [get_opponent_distances(seq)]
+    new_df['obv_for'] = [get_fast_action_obv_for(seq)]
+    new_df['obv_total'] = [get_fast_action_obv_for(seq)]
+    new_df['xg'] = [get_fast_action__xg(seq)]
     return new_df
 
 def get_sequence_id(seq):
@@ -28,20 +35,27 @@ def get_sequence_id(seq):
 def get_seq_num_of_event_type(seq, event_type):
     return len(seq[seq['type'] == event_type])
 
-def get_fast_action_obv(corner):
+def get_fast_action_obv_for(seq):
     obv = 0
-    for i in range(len(corner)):
-        if corner.iloc[i]['obv_for_net']:
-            obv += float(corner.iloc[i]['obv_for_net'])
+    for i in range(len(seq)):
+        if seq.iloc[i]['obv_for_net']:
+            obv += float(seq.iloc[i]['obv_for_net'])
     return obv
 
-def get_fast_action__xg(corner):
+def get_fast_action_obv_total(seq):
+    obv = 0
+    for i in range(len(seq)):
+        if seq.iloc[i]['obv_total_net']:
+            obv += float(seq.iloc[i]['obv_total_net'])
+    return obv
+
+def get_fast_action__xg(seq):
     xg = 0
-    for i in range(len(corner)):
-        if corner.iloc[i]['type'] == 'Shot':
-            if corner.iloc[i]['event'].get('statsbomb_xg') != None:
-                print(corner.iloc[i]['event'].get('statsbomb_xg'))
-                xg += float(corner.iloc[i]['event'].get('statsbomb_xg'))
+    for i in range(len(seq)):
+        if seq.iloc[i]['type'] == 'Shot':
+            if seq.iloc[i]['event'].get('statsbomb_xg') != None:
+                print(seq.iloc[i]['event'].get('statsbomb_xg'))
+                xg += float(seq.iloc[i]['event'].get('statsbomb_xg'))
     return xg
 
 def get_seq_num_of_events(seq):
@@ -71,12 +85,12 @@ def get_seq_path(seq):
                 path.append(end_area)
     return path
 
-def get_seq_start(seq):
+def get_seq_start_area(seq):
     for start_area in seq['start_area'].values:
         if start_area != '':
             return start_area
 
-def get_seq_end(seq):
+def get_seq_end_area(seq):
     start_areas = seq['start_area'].values[::-1]
     end_areas = seq['end_area'].values[::-1]
     for start_area, end_area in zip(start_areas, end_areas):
@@ -84,6 +98,20 @@ def get_seq_end(seq):
             return end_area
         if start_area != '':
             return start_area
+
+def get_seq_start_loc(seq, loc):
+    for loc in seq[loc].values:
+        if loc != '':
+            return loc
+
+def get_seq_end_loc(seq, corrdinate):
+    start_locations = seq[f'start_{corrdinate}'].values[::-1]
+    end_locations = seq[f'end_{corrdinate}'].values[::-1]
+    for start_loc, end_loc in zip(start_locations, end_locations):
+        if end_loc != '':
+            return end_loc
+        if start_loc != '':
+            return start_loc
 
 def get_opponent_distances(seq):
     start_locations = [[start_x, start_y] for start_x, start_y in zip(seq['start_x'].values, seq['start_y'].values)]
