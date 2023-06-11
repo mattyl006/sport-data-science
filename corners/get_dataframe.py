@@ -1,5 +1,20 @@
 import pandas as pd
 from corners.metric import *
+import os
+
+def prepare_matches_from_pkl(pkl_path):
+    pkl_preprocessed_path = pkl_path[:-4] + '_preprocessed.pkl'
+    if not os.path.exists(pkl_preprocessed_path):
+        matches = pd.read_pickle(pkl_path)
+        matches = add_positions(matches)
+        matches, matches_without_sb360 = swap_y(matches)
+        for match_id in matches_without_sb360:
+            matches = matches[matches['match_id'] != match_id]
+        matches = generalize_perspective_sb360(matches)
+        matches = add_grid_areas(matches)
+        matches.to_pickle(pkl_preprocessed_path)
+        return matches
+    return pd.read_pickle(pkl_preprocessed_path)
 
 default_events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
 'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
@@ -27,7 +42,7 @@ def get_df_row(corner, events_to_analize=default_events_to_analize):
 def get_sequence_id(df):
     start_id = df.iloc[0]['id']
     end_id = df.iloc[-1]['id']
-    return f'{start_id}-{end_id}'
+    return f'{start_id}#{end_id}'
 
 def get_corner_obv(corner):
     obv = 0
