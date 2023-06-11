@@ -52,6 +52,7 @@ def get_corners_sequences(sequences):
     for i, sequence in enumerate(sequences):
         try:
             if (sequence['play_pattern'] == 'From Corner').any():
+                sequence = sequence[sequence['play_pattern'] == 'From Corner']
                 arr.append(sequence)
         except:
             print(sequence)
