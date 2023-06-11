@@ -54,7 +54,6 @@ def get_fast_action__xg(seq):
     for i in range(len(seq)):
         if seq.iloc[i]['type'] == 'Shot':
             if seq.iloc[i]['event'].get('statsbomb_xg') != None:
-                print(seq.iloc[i]['event'].get('statsbomb_xg'))
                 xg += float(seq.iloc[i]['event'].get('statsbomb_xg'))
     return xg
 

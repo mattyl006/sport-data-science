@@ -190,6 +190,10 @@ class Draw:
             event_type = row['type']
             timespamp = row['timestamp']
             print(f'{i}: {player} ({event_type}) <{timespamp}>')
+            try:
+                print(f'SCORE: {row["score"]}')
+            except:
+                pass
             if pdf:
                 text = f'{i}: {player} ({event_type}) <{timespamp}>'
                 pdf.cell(0, 4, txt = text, ln = 1, align = 'L')
