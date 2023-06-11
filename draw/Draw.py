@@ -200,9 +200,17 @@ class Draw:
             if event_type in self.events_without_location:
                 continue
             else:
+                # swap perspective if corner and not start team
+                if corner and row['team']!= start_team:
+                    row['start_x'] = 120.0 - float(row['start_x'])
+                    row['start_y'] = 80.0 - float(row['start_y'])
                 start = (float(row['start_x']*self.scale), float(row['start_y']*self.scale))
             if row['end_x'] != '' and row['end_y'] != '':
-                end = (float(row['end_x']*self.scale), float(row['end_y']*self.scale))
+                # swap perspective if corner and not start team
+                if corner and row['team']!= start_team:
+                    row['end_x'] = 120.0 - float(row['end_x'])
+                    row['end_y'] = 80.0 - float(row['end_y'])
+                end = (float(row['end_x']*self.scale), float(row['end_y']*self.scale))         
             else:
                 end = start
             match row['type']:
@@ -250,6 +258,10 @@ class Draw:
             for _, row in sequence.iterrows():
                 for location, teammate, actor in zip(row['context_locations'], row['teammate_locations'], row['actor_locations']):
                     if len(location) > 0 and location != '': #and True in row['actor_locations']
+                        # swap perspective if corner and not start team
+                        if corner and row['team']!= start_team:
+                            location[0] = 120.0 - float(location[0])
+                            location[1] = 80.0 - float(location[1])
                         if team != start_team and teammate:
                             team_color = 'red'
                         elif team == start_team and not teammate:
