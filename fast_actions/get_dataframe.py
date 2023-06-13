@@ -4,7 +4,7 @@ import math
 events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
 'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
 
-def get_fast_action_row(seq):
+def get_fast_action_row(seq, with_obv=True):
     new_df = pd.DataFrame()
     new_df['id'] = [get_sequence_id(seq)]
     new_df['team'] = [get_fast_action_team(seq)]
@@ -22,10 +22,18 @@ def get_fast_action_row(seq):
     new_df['end_y'] = [get_seq_end_loc(seq, 'y')]
     new_df['key_pass_len'] = [get_key_pass_len(seq)]
     new_df['opponent_distances'] = [get_opponent_distances(seq)]
-    new_df['obv_for'] = [get_fast_action_obv_for(seq)]
-    new_df['obv_total'] = [get_fast_action_obv_for(seq)]
+    new_df['match_id'] = [get_sequence_match_id(seq)]
+    if with_obv:
+        new_df['obv_for'] = [get_fast_action_obv_for(seq)]
+        new_df['obv_total'] = [get_fast_action_obv_for(seq)]
+    else:
+        new_df['obv_for'] = ['']
+        new_df['obv_total'] = ['']
     new_df['xg'] = [get_fast_action__xg(seq)]
     return new_df
+
+def get_sequence_match_id(seq):
+    return seq.iloc[0]['match_id']
 
 def get_sequence_id(seq):
     start_id = seq.iloc[0]['id']
