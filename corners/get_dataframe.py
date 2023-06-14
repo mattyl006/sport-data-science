@@ -113,13 +113,14 @@ def get_df_num_of_event_type(df, event_type):
     return len(df[df['type'] == event_type])
 
 def get_shot_on_goal(corner):
+    num = 0
     for i in range(len(corner)):
         if corner.iloc[i]['type'] == 'Shot':
             if corner.iloc[i]['event'].get('outcome') != None:
                 outcome = corner.iloc[i]['event'].get('outcome', {}).get('name')
                 if outcome not in ['Blocked', 'Off T']:
-                    return 1
-    return 0
+                    num +=1
+    return num
 
 def get_match_id(corner):
     return corner.iloc[0]['match_id']
