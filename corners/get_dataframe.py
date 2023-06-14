@@ -1,6 +1,10 @@
 import pandas as pd
 from corners.metric import *
 import os
+from dataframe_modify.add_positions import add_positions
+from dataframe_modify.swap_perspective import swap_y
+from dataframe_modify.swap_perspective import generalize_perspective_sb360
+from dataframe_modify.grid_areas import add_grid_areas
 
 def prepare_matches_from_pkl(pkl_path):
     pkl_preprocessed_path = pkl_path[:-4] + '_preprocessed.pkl'
@@ -19,15 +23,21 @@ def prepare_matches_from_pkl(pkl_path):
 default_events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
 'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
 
-def get_df_row(corner, events_to_analize=default_events_to_analize, end_pass_zones = False, shot_on_goal = False):
+def get_df_row(corner, events_to_analize=default_events_to_analize, end_pass_zones = False, shot_on_goal = False, obv=True):
     """Get the row to dataframe of the corner."""
     corner_df = pd.DataFrame()
+    corner_df['match_id'] = [get_match_id(corner)]
     corner_df['id'] = [get_sequence_id(corner)]
     corner_df['team'] = [get_corner_team(corner)]
     # corner_df['opponent'] = [get_corner_opponent(corner)]
     corner_df['num_of_events'] = [get_corner_num_of_events(corner)]
     corner_df['duration'] = [get_corner_duration(corner)]
     
+    corner_df['side_right'] = [1 if get_side_of_corner(corner) == 'right' else 0]
+    corner_df['side_left'] = [1 if get_side_of_corner(corner) == 'left' else 0]
+
+    corner_df['first_event_end_x'], corner_df['first_event_end_y'] = get_first_event_end_point(corner)
+
     for event_type in events_to_analize:
         event_type_str = event_type.replace(' ', '_').lower()
         corner_df[f'num_of_{event_type_str}'] = [get_df_num_of_event_type(corner, event_type)]
@@ -35,7 +45,8 @@ def get_df_row(corner, events_to_analize=default_events_to_analize, end_pass_zon
     #TODO: consider adding num of passes to the zones
 
     corner_df['corner_score'] = [get_conrner_score(corner)]
-    corner_df['obv'] = [get_corner_obv(corner)]
+    if obv:
+        corner_df['obv'] = [get_corner_obv(corner)]
     corner_df['xg'] = [get_corner_xg(corner)]
 
     if end_pass_zones:
@@ -109,3 +120,22 @@ def get_shot_on_goal(corner):
                 if outcome not in ['Blocked', 'Off T']:
                     return 1
     return 0
+
+def get_match_id(corner):
+    return corner.iloc[0]['match_id']
+
+def get_side_of_corner(corner):
+    start_y = corner.iloc[0]['start_y']
+    start_x = corner.iloc[0]['start_x']
+    if start_y <= 0.6 and start_x >= 119.2:
+        return 'left'
+    elif start_y >= 78.5 and start_x >= 119.2:
+        return 'right'
+    raise Exception('Corner is not from the side!')
+
+def get_first_event_end_point(corner):
+    for i in range(len(corner)):
+        return corner.iloc[i]['end_x'], corner.iloc[i]['end_y']
+    raise Exception('Corner first event has no end point!')
+
+    
