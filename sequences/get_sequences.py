@@ -1,13 +1,15 @@
 import pandas as pd
+from tqdm.notebook import tqdm_notebook
 
 def get_sequences_by_possession(df):
     sequences = []
     sequence = []
-    split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
+    # split_events = {'Injury Stoppage', 'Half End', 'Foul Committed'}
+    split_events = {'Half End'}
     prev_team = df['team'][0]
     prev_possession_team = df['possession_team'][0]
     prev_possesion = df['possession'][0]
-    for _, row in df.iterrows():
+    for _, row in tqdm_notebook(df.iterrows(), total=len(df), dynamic_ncols=True):
         if row['type'] in split_events:
             if len(sequence) != 0:
                 sequence.append(row)
@@ -52,6 +54,7 @@ def get_corners_sequences(sequences):
     for i, sequence in enumerate(sequences):
         try:
             if (sequence['play_pattern'] == 'From Corner').any():
+                sequence = sequence[sequence['play_pattern'] == 'From Corner']
                 arr.append(sequence)
         except:
             print(sequence)
