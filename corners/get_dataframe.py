@@ -21,7 +21,7 @@ def prepare_matches_from_pkl(pkl_path):
     return pd.read_pickle(pkl_preprocessed_path)
 
 default_events_to_analize = ['Pass', 'Carry', 'Miscontrol', 'Dribble', 'Error', 'Duel', 'Ball Receipt*', 
-'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot']
+'Clearance', 'Ball Recovery', 'Dispossessed', 'Interception', 'Block', 'Shot', 'Foul Committed', 'Foul Won']
 
 def get_df_row(corner, events_to_analize=default_events_to_analize, end_pass_zones = False, shot_on_goal = False, obv=True):
     """Get the row to dataframe of the corner."""
@@ -118,7 +118,7 @@ def get_shot_on_goal(corner):
         if corner.iloc[i]['type'] == 'Shot':
             if corner.iloc[i]['event'].get('outcome') != None:
                 outcome = corner.iloc[i]['event'].get('outcome', {}).get('name')
-                if outcome not in ['Blocked', 'Off T']:
+                if outcome not in ['Blocked', 'Off T', 'Wayward']:
                     num +=1
     return num
 

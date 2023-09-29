@@ -4,18 +4,11 @@ def evaluate_corner(corner, params):
     """Evaluate the corner and return a score."""
     score = 0
     corner = corner.apply(evaluate_event, axis=1, args=(params,))
-      
-    # Divide the sum of the scores by the number of passes
     if len(corner[corner['type'] == 'Pass']) == 0:
         score = corner['corner_score'].sum() * 2
     else:
         score = corner['corner_score'].sum() / len(corner[corner['type'] == 'Pass'])
-    
     corner['score'] = score
-
-    # print(f'Corner score: {score:.2f} Period: {corner["period"].iloc[0]}, Time: {corner["minute"].iloc[0]}:{corner["second"].iloc[0]}, Team: {corner["team"].iloc[0]}')
-    #Print the score
-    # print(f'Corner score: {score:.2f}')
     return corner
 
 
@@ -83,7 +76,7 @@ def evaluate_pass(pass_, params):
 
 
 def get_end_zone(x, y):
-    """Return the end zone of the pass."""
+    """Return the end zone of the event."""
     zone = ""
     match x, y:
         case _ if x < 48:
@@ -148,6 +141,7 @@ def evaluate_ball_recovery(ball_recovery, params):
         score += params['ball_recovery_by_opponent']
     return score
 
+
 def evaluate_foul_committed(foul, params):
     """Evaluate the foul committed and return a score."""
     score = 0
@@ -158,9 +152,4 @@ def evaluate_foul_committed(foul, params):
         score += params['foul_committed_by_opponent']
     return score
 
-
-
-# TODO: dribbles, outcome of foul_committed (penalty, cards)
-
-# TODO: consider carry, duel?
 
